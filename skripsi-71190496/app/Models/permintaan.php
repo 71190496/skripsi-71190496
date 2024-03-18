@@ -2,30 +2,52 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class permintaan extends Model
 {
     use HasFactory;
-    protected $table = 'peserta_pelatihan_tests';
+    protected $table = 'permintaan';
+    protected $primaryKey = 'id';
+    // protected $dates = ['tanggal_mulai'];
     protected $fillable = [
-        'id_gender',
-        'id_rentang_usia',
-        'id_kabupaten',
-        'id_provinsi',
-        'id_negara',
-        'id_organisasi',
-        'informasi_pelatihan',
-        'nama_peserta',
-        'email_peserta',
-        'no_hp',
-        'email_peserta',
-        'nama_organisasi',
-        'jabatan_peserta',
-        'pelatihan_relevan',
-        'harapan_pelatihan'
+        'id_tema', 
+        'nama_pelatihan', 
+        'metode_pelatihan',
+        'jenis_pelatihan',
+        'lokasi_pelatihan',  
+        'tanggal_mulai',
+        'tanggal_selesai',
+        'image',
+        'file',
+        'deskripsi_pelatihan',
     ];
+
+    public function peserta()
+    {
+        return $this->hasMany(peserta_permintaan::class, 'id_permintaan');
+    }
+
+    public function fasilitator_permintaan()
+    {
+        return $this->belongsToMany(fasilitator_pelatihan_test::class, 'fasilitator_permintaan', 'id_permintaan', 'id_fasilitator');
+    }
+
+    public function gambarPermintaan()
+    {
+        return $this->hasMany(gambar_permintaan::class, 'id_permintaan');
+    }
+
+    public function filePermintaan()
+    {
+        return $this->hasMany(file_permintaan::class, 'id_permintaan');
+    }
+
+    public function permintaan_pelatihan(){
+        return $this->belongsTo(permintaan_pelatihan::class, 'id_permintaan');
+    }
     public function rentang_usia(){
         return $this->belongsTo(rentang_usia::class);
     }

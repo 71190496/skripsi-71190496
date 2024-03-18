@@ -8,5 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class internal_eksternal extends Model
 {
     use HasFactory;
-    protected $table = 'internal_eksternal';
+    protected $table = 'internal_eksternals';
+    protected $primaryKey = 'id_internal_eksternal';
+    protected $fillable = ['id_internal_eksternal', 'internal_eksternal'];
+
+    public function fasilitator_pelatihan()
+    {
+        return $this->hasMany(fasilitator_pelatihan_test::class, 'id_internal_eksternal');
+    }
 }

@@ -11306,3 +11306,22 @@ footer.sticky-footer .copyright {
 body.sidebar-toggled footer.sticky-footer {
   width: 100%;
 }
+
+.toggle-password-login{
+  position: absolute;
+  right: 80px;
+  top: 191px;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+.toggle-password-regist {
+  position: absolute;
+  right: 80px;
+  top: 255px;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+
+

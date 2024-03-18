@@ -17,11 +17,11 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
+    protected $table = 'users';
     protected $fillable = [
         'name',
         'email',
-        'password',
-        'role'
+        'password'
     ];
 
     /**
@@ -42,4 +42,22 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function pelatihan()
+    {
+        return $this->belongsTo(pelatihan::class);
+    }
+    public function permintaan_pelatihan()
+    {
+        return $this->belongsTo(permintaan_pelatihan::class);
+    }
+    public function konsultasi()
+    {
+        return $this->belongsTo(konsultasi::class);
+    }
+
+    public function user_presensi()
+    {
+        return $this->hasMany(UserPresensi::class, 'id_user');
+    }
 }

@@ -2,65 +2,87 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Spatie\MediaLibrary\HasMedia;
+use Illuminate\Database\Eloquent\Model; 
+use Brackets\Media\HasMedia\ProcessMediaTrait;
+use Brackets\Media\HasMedia\HasMediaThumbsTrait;
+use Brackets\Media\HasMedia\AutoProcessMediaTrait;
+use Brackets\Media\HasMedia\HasMediaCollectionsTrait;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 
-class reguler extends Model
+class Reguler extends Model implements HasMedia
 {
-    use HasFactory;
-    protected $table = 'peserta_pelatihan_tests';
+
+    use ProcessMediaTrait;
+    use AutoProcessMediaTrait;
+    use HasMediaCollectionsTrait;
+    use HasMediaThumbsTrait;
+    
+
+
+    protected $table = 'reguler';
+    protected $primaryKey = 'id';
     protected $fillable = [
-        'id_gender',
-        'id_rentang_usia',
-        'id_kabupaten',
-        'id_provinsi',
-        'id_negara',
-        'id_organisasi',
-        'nama_peserta',
-        'email_peserta',
-        'no_hp',
-        'email_peserta',
-        'nama_organisasi',
-        'jabatan_peserta',
-        'pelatihan_relevan',
-        'harapan_pelatihan'
+        'id_pelatihan',
+        // 'gambar',
+        'id_tema',
+        'metode_pelatihan',
+        'lokasi_pelatihan',
+        'fee_pelatihan',
+        'kuota_peserta',
+        'nama_pelatihan',
+        'tanggal_mulai',
+        'tanggal_selesai',
+        'tanggal_pendaftaran',
+        'tanggal_batas_pendaftaran',
+        'deskripsi_pelatihan',
+        'status',
+
     ];
 
-    public function user()
+
+    protected $dates = [
+        'tanggal_mulai',
+        'tanggal_selesai',
+        'tanggal_pendaftaran',
+        'tanggal_batas_pendaftaran',
+        'created_at',
+        'updated_at',
+
+    ];
+
+    public function fasilitator()
     {
-        return $this->hasMany(User::class);
+        return $this->belongsToMany(fasilitator_pelatihan_test::class, 'fasilitator_reguler','id_pelatihan','id_fasilitator');
     }
-    public function rentang_usia()
+
+    // public function pelatihan_fasilitator(){
+    //     return $this->hasMany(pelatihan_fasilitator::class);
+    // }
+
+    protected $appends = ['resource_url'];
+
+    /* ************************ ACCESSOR ************************* */
+
+    public function getResourceUrlAttribute()
     {
-        return $this->belongsTo(rentang_usia::class);
+        return url('/admin/regulers/' . $this->getKey());
     }
-    public function informasi_pelatihan()
+
+    public function registerMediaCollections(): void
     {
-        return $this->belongsTo(informasi_pelatihan::class);
+        $this->addMediaCollection('gambar')
+            ->maxNumberOfFiles(3);
     }
-    public function gender()
+
+    public function registerMediaConversions(Media $media = null): void
     {
-        return $this->belongsTo(gender::class);
-    }
-    public function organisasi()
-    {
-        return $this->belongsTo(Organisasi::class);
-    }
-    public function kabupaten_kota()
-    {
-        return $this->belongsTo(kabupaten_kota::class);
-    }
-    public function provinsi()
-    {
-        return $this->belongsTo(provinsi::class);
-    }
-    public function negara()
-    {
-        return $this->belongsTo(negara::class);
-    }
-    public function peserta()
-    {
-        return $this->hasMany(peserta_pelatihan_test::class);
+        $this->addMediaConversion('detail_hd')
+            ->width(1920)
+            ->height(1080)
+            ->performOnCollections('gambar')
+            ->autoRegisterThumb200();
+            // ->canView('media.view');
     }
 }

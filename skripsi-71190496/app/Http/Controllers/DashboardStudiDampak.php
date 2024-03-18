@@ -2,8 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Studi;
+use App\Models\pelatihan;
+use App\Models\Konsultasi;
+use App\Models\permintaan;
 use Illuminate\Http\Request;
+use App\Exports\StudiDampakExport;
+use App\Models\PesertaStudiDampak;
+use App\Models\permintaan_pelatihan;
+use Maatwebsite\Excel\Facades\Excel;
 
 class DashboardStudiDampak extends Controller
 {
@@ -12,7 +18,10 @@ class DashboardStudiDampak extends Controller
      */
     public function index()
     {
-        return view('dashboard.studidampak.index');
+        $data = pelatihan::orderBy('id_pelatihan')->get();
+        $data2 = permintaan::orderBy('id')->get();
+        $data3 = Konsultasi::orderBy('id')->get();
+        return view('dashboard.studidampak.index', compact('data', 'data2','data3'));
     }
 
     /**
@@ -34,15 +43,22 @@ class DashboardStudiDampak extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Studi $studi)
+    public function show($id_pelatihan)
     {
-        //
+       $data = PesertaStudiDampak::where('id_pelatihan', $id_pelatihan)->get();
+        return view('dashboard.studidampak.show', compact('data')); 
     }
 
+    public function export(Request $request, $id_pelatihan)
+    {
+        $data = PesertaStudiDampak::where('id_pelatihan', $id_pelatihan)
+            ->get();
+        return Excel::download(new StudiDampakExport($data), 'studidampak_pelatihan.xlsx');
+    }
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Studi $studi)
+    public function edit()
     {
         //
     }
@@ -50,7 +66,7 @@ class DashboardStudiDampak extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Studi $studi)
+    public function update(Request $request)
     {
         //
     }
@@ -58,7 +74,7 @@ class DashboardStudiDampak extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Studi $studi)
+    public function destroy()
     {
         //
     }

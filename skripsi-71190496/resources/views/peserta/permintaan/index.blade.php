@@ -1,14 +1,22 @@
-@extends('peserta.layouts.main')
+@extends('peserta.layouts.coba')
+<link href="{{ asset('pesertastyle/assets/img/stc1.png') }}" rel="icon">
 
 {{-- @section('container') --}}
 <main id="main" data-aos="fade-in">
     <!-- ======= Breadcrumbs ======= -->
-    <div class="breadcrumbs">
+    <section id="breadcrumbs" class="breadcrumbs">
         <div class="container">
-            <h2>Pelatihan Permintaan</h2>
-            <p>Daftar pelatihan permintaan</p>
+
+            <div class="d-flex justify-content-between align-items-center">
+                <h2>Kontak</h2>
+                <ol>
+                    <li><a href="/peserta/beranda">Beranda</a></li>
+                    <li>Kontak</li>
+                </ol>
+            </div>
+
         </div>
-    </div><!-- End Breadcrumbs -->
+    </section><!-- End Breadcrumbs -->
 
     <section id="courses" class="courses">
         <div class="container" data-aos="fade-up">
@@ -23,12 +31,12 @@
                                         <h4>Web Development</h4>
                                         <p class="price">$169</p>
                                     </div> --}}
-                                    <h3><a href="/peserta/permintaan/{{ $item->id }}">{{ $item['nama_pelatihan'] }}</a>
+                                    <h3><a href="/peserta/permintaan/{{ $item->id_pelatihan }}">{{ $item['nama_pelatihan'] }}</a>
                                     </h3>
                                     <p>{!! Str::limit($item->deskripsi_pelatihan, '50') !!}</p>
                                     <div class="trainer d-flex justify-content-between align-items-center">
                                         <div class="trainer-profile d-flex align-items-center">
-                                            <a href="/peserta/permintaan/{{ $item->id }}">See More..</a>
+                                            <a href="/peserta/permintaan/{{ $item->id_pelatihan }}">See More..</a>
                                         </div>
                                     </div>
                                 </div>

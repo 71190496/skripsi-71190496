@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\admin_kontak;
 use App\Models\kontak;
+use App\Models\admin_kontak;
+use App\Mail\KontakEmail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class KontakController extends Controller
 {
@@ -19,6 +21,27 @@ class KontakController extends Controller
         return view('peserta.kontak.index',compact('data'),[
             'title' => 'Kontak'
         ]);
+    }
+
+    public function sendEmail(Request $request)
+    {
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email',
+            'subject' => 'required',
+            'message' => 'required',
+        ]);
+
+        $data = [
+            'name' => $request->name,
+            'email' => $request->email,
+            'subject' => $request->subject,
+            'message' => $request->message,
+        ];
+
+        Mail::to('your@email.com')->send(new KontakEmail($data));
+
+        return back()->with('success', 'Your message has been sent. Thank you!');
     }
 
     /**
@@ -47,9 +70,9 @@ class KontakController extends Controller
         ]);
 
         $data = [
-            'nama_peserta' => $request->lokasi,
-            'email' => $request->email,
-            'subjek' => $request->telepon,
+            'nama_peserta' => $request->nama_peserta,
+            'email_peserta' => $request->email_peserta,
+            'subjek' => $request->subjek,
             'pesan' => $request->pesan,
         ];
         dd($data);

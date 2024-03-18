@@ -9,6 +9,7 @@ class fasilitator_pelatihan_test extends Model
 {
     use HasFactory;
     protected $table = 'fasilitator_pelatihan_tests';
+    protected $primaryKey = 'id_fasilitator';
     protected $fillable = [
         'nama_fasilitator',
         'tempat_tgl_lahir',
@@ -20,10 +21,25 @@ class fasilitator_pelatihan_test extends Model
         'asal_lembaga',
         'body'
     ];
+
     public function internal_eksternal(){
-        return $this->belongsTo(internal_eksternal::class);
+        return $this->belongsTo(internal_eksternal::class, 'id_internal_eksternal');
     }
+    // public function fasilitator_pelatihan_test(){
+    //     return $this->belongsToMany(fasilitator_pelatihan_test::class);
+    // }
     public function gender(){
-        return $this->belongsTo(gender::class);
+        return $this->belongsTo(gender::class, 'id_gender');
     }
+    public function pelatihan(){
+        return $this->belongsToMany(pelatihan::class);
+    }
+
+    public function reguler(){
+        return $this->belongsToMany(reguler::class, 'fasilitator_reguler','id_pelatihan');
+    }
+    public function pelatihan_fasilitator(){
+        return $this->hasMany(pelatihan_fasilitator::class,'id_fasilitator','id_fasilitator');
+    }
+    
 }

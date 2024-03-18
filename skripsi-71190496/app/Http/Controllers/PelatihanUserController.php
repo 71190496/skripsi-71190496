@@ -3,10 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\pelatihan;
+use App\Models\permintaan;
 use Illuminate\Http\Request;
-use App\Models\pelatihanuser;
+// use App\Models\pelatihanuser;
+use App\Models\permintaan_pelatihan;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use App\Models\peserta_pelatihan_test;
+use App\Models\peserta_permintaan;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Response;
 
@@ -17,12 +21,16 @@ class PelatihanUserController extends Controller
      */
     public function index()
     {
+        $pelatihans = peserta_pelatihan_test::where('id_user', auth()->user()->id)->get();
+        $permintaans = peserta_permintaan::with(['permintaan_pelatihan'])->where('id_user', auth()->user()->id)->get();
 
         return view('peserta.pelatihan.index', [
             'title' => 'Pelatihan Saya',
-            'pelatihans' => peserta_pelatihan_test::where('id_user', auth()->user()->id)->get()
+            'pelatihans' => $pelatihans,
+            'permintaans' => $permintaans,
         ]);
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -46,14 +54,38 @@ class PelatihanUserController extends Controller
      */
     public function show($id)
     {
-        $pelatihan = pelatihan::find($id);
-        $data  = pelatihan::where('id', $id)->get();
+        // Cek apakah id berasal dari tabel pelatihan atau permintaan
+        if (pelatihan::where('id_pelatihan', $id)->exists()) {
+            // Jika id berasal dari tabel pelatihan
+            $pelatihan = pelatihan::find($id);
+            $data = pelatihan::where('id_pelatihan', $id)->get();
+            $permintaans = [];
+        } elseif (permintaan::where('id', $id)->exists()) {
+            // Jika id berasal dari tabel permintaan
+            $permintaan = permintaan::find($id);
+            // $id_pelatihan = $permintaan->id_pelatihan;
+            $permintaans = permintaan::with(['filePermintaan'])->where('id', $id)->get();
+            $data = [];
+        } else {
+            // Jika id tidak ditemukan di kedua tabel
+            abort(404);
+        }
+        // dd($permintaans);
 
-        return view('peserta.pelatihan.show', compact('pelatihan', 'data'), [
+        $kembali = route('peserta.pelatihan.show', ['id' => $id]);
+        $studi = route('peserta.studidampak.create', ['id' => $id]);
+        $hadir = route('peserta.daftarhadir.create', ['id' => $id]);
+        $evaluasi = route('peserta.evaluasi.create', ['id' => $id]);
+        $survey = route('peserta.surveykepuasan.create', ['id' => $id]);
+        $sertifikat = route('peserta.sertifikat.show', ['id' => $id]);
+
+        return view('peserta.pelatihan.show', compact('data', 'kembali', 'studi', 'hadir', 'evaluasi', 'survey', 'permintaans', 'sertifikat'), [
             'title' => 'Detail Pelatihan Saya',
-
         ]);
     }
+
+
+
 
     public function download($id)
     {
@@ -75,24 +107,24 @@ class PelatihanUserController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(pelatihanuser $pelatihanuser)
-    {
-        //
-    }
+    // public function edit(pelatihanuser $pelatihanuser)
+    // {
+    //     //
+    // }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, pelatihanuser $pelatihanuser)
-    {
-        //
-    }
+    // /**
+    //  * Update the specified resource in storage.
+    //  */
+    // public function update(Request $request, pelatihanuser $pelatihanuser)
+    // {
+    //     //
+    // }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(pelatihanuser $pelatihanuser)
-    {
-        //
-    }
+    // /**
+    //  * Remove the specified resource from storage.
+    //  */
+    // public function destroy(pelatihanuser $pelatihanuser)
+    // {
+    //     //
+    // }
 }

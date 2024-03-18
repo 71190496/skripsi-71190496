@@ -5,7 +5,7 @@
     <h1 class="h2">Daftar Hadir</h1>
   </div>
 
-  <div class="table-responsive">
+  <div class="table-responsive col-lg-8">
     <table class="table table-striped table-sm">
       <thead>
         <tr>

@@ -10,8 +10,8 @@ class konsultasi extends Model
     use HasFactory;
     protected $table = "konsultasis";
     protected $fillable = [
-        'id_jenis_organisasi',
-        'id_jenis_layanan',
+        'id_user',
+        'jenis_organisasi', 
         'id_kabupaten',
         'id_provinsi',
         'id_negara',
@@ -19,18 +19,27 @@ class konsultasi extends Model
         'alamat',
         'email',
         'no_hp',
-        'deskripsi_pelatihan'
+        'deskripsi_kebutuhan'
     ];
-    public function organisasi()
-    {
-        return $this->belongsTo(Organisasi::class);
+
+    public function user(){
+        return $this->belongsTo(User::class);
     }
+    // public function organisasi()
+    // {
+    //     return $this->belongsTo(Organisasi::class. 'id_jenis_organisasi');
+    // }
     public function kabupaten_kota()
     {
-        return $this->belongsTo(kabupaten_kota::class);
+        return $this->belongsTo(kabupaten_kota::class, 'id_kabupaten');
     }
     public function negara()
     {
-        return $this->belongsTo(negara::class);
+        return $this->belongsTo(negara::class, 'id_negara');
     }
+    public function provinsi()
+    {
+        return $this->belongsTo(provinsi::class, 'id_provinsi');
+    }
+    
 }

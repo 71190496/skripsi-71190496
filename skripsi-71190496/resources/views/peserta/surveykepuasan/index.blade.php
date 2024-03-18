@@ -6,7 +6,7 @@
 </div>
 
 <h4>Reguler</h4>
-<div class="table-responsive">
+<div class="table-responsive col-lg-8">
   <table class="table table-striped table-sm">
     <thead>
       <tr>
