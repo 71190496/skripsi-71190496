@@ -98,11 +98,7 @@
                                                 @error('name') is-invalid 
                                             @enderror
                                                 autocomplete="name">
-                                            @error('name')
-                                                <div class="text-danger mt-2" style="text-align: left">
-                                                    {{ $message }}
-                                                </div>
-                                            @enderror
+
                                         </div>
 
                                         <div class="form-group">
@@ -111,11 +107,7 @@
                                                 placeholder="Masukan Email" autofocus
                                                 @error('email') is-invalid  @enderror>
                                         </div>
-                                        @error('email')
-                                            <div class="text-danger" style="text-align: left">
-                                                {{ $message }}
-                                            </div>
-                                        @enderror
+
 
                                         <div class="form-group">
                                             <input type="password" class="form-control form-control-user" id="password"
@@ -125,13 +117,23 @@
                                                 class="fa fa-fw fa-eye field-icon toggle-password-regist"
                                                 onclick="togglePassword()"></span>
                                         </div>
+                                        @error('name')
+                                            <div class="text-danger mt-2" style="text-align: left">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+                                        @error('email')
+                                            <div class="text-danger" style="text-align: left">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
                                         @error('password')
                                             <div class="text-danger" style="text-align: left">
                                                 {{ $message }}
                                             </div>
                                         @enderror
                                         <hr>
-                                        <button class="btn btn-success btn-user btn-block" type="submit">Login</button>
+                                        <button class="btn btn-success btn-user btn-block" type="submit">Sign Up</button>
                                     </form>
                                     <hr>
                                     <div class="text-center">
@@ -163,7 +165,7 @@
         function togglePassword() {
             var passwordInput = document.getElementById("password");
             var toggleIcon = document.querySelector(".toggle-password-regist");
-    
+
             if (passwordInput.type === "password") {
                 passwordInput.type = "text";
                 toggleIcon.classList.remove("fa-eye");

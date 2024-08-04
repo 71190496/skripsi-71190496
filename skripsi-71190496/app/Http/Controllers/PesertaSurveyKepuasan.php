@@ -4,11 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Models\negara;
 use App\Models\Survey;
+use App\Models\evaluasi;
+use App\Models\form_survey_reguler;
+use App\Models\form_survey_permintaan;
+use App\Models\form_survey_konsultasi;
+use App\Models\survey_pelatihan_reguler;
+use App\Models\survey_pelatihan_permintaan;
+use App\Models\survey_pelatihan_konsultasi;
 use App\Models\provinsi;
 use App\Models\pelatihan;
-use App\Models\permintaan_pelatihan;
 use Illuminate\Http\Request;
 use App\Models\kabupaten_kota;
+use App\Models\konsultasi;
+use App\Models\permintaan_pelatihan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 
@@ -31,6 +39,7 @@ class PesertaSurveyKepuasan extends Controller
         // Ambil data berdasarkan $id
         $pelatihan = pelatihan::with('fasilitator_pelatihan')->where('id_pelatihan', '=', $id)->first();
         $permintaan = permintaan_pelatihan::where('id', $id)->first();
+        $konsultasi = konsultasi::where('id', $id)->first();
 
         // Persiapkan data
         $jsonData = [];
@@ -43,12 +52,17 @@ class PesertaSurveyKepuasan extends Controller
             $jsonData['permintaan'] = $permintaan;
         }
 
+        if ($konsultasi) {
+            $jsonData['konsultasi'] = $konsultasi;
+        }
+
         $jsonString = json_encode($jsonData);
         $dataArray = json_decode($jsonString, true);
 
         // Inisialisasi variabel id untuk pelatihan dan permintaan
         $id_pelatihan = null;
         $id_permintaan = null;
+        $id_konsultasi = null;
 
         // Periksa apakah data yang ditemukan adalah pelatihan atau permintaan
         if (isset($dataArray['pelatihan'])) {
@@ -57,8 +71,11 @@ class PesertaSurveyKepuasan extends Controller
         } elseif (isset($dataArray['permintaan'])) {
             // Jika data yang ditemukan adalah data permintaan
             $id_permintaan = $dataArray['permintaan']['id'];
+        } elseif (isset($dataArray['konsultasi'])) {
+            // Jika data yang ditemukan adalah data konsultasi
+            $id_konsultasi = $dataArray['konsultasi']['id'];
         }
-        // dd($id_permintaan);
+        // dd($id_konsultasi);
 
         // Tentukan tipe data dan proses sesuai kebutuhan
         if ($id_pelatihan !== null) {
@@ -70,14 +87,39 @@ class PesertaSurveyKepuasan extends Controller
             $sertifikat = route('peserta.sertifikat.show', ['id' => $id]);
             // Get all facilitators related to the pelatihan
 
-           return view('peserta.surveykepuasan.create', compact('id_pelatihan', 'kembali', 'studi', 'hadir', 'evaluasi', 'survey','sertifikat'), [
-                'pelatihan' => $pelatihan,
-                'title' => 'Form Survey Kepuasan',
-                'negara' => negara::all(),
-                'kabupaten_kota' => kabupaten_kota::all(),
-                'provinsi' => provinsi::all()
-                // Kirim data tambahan jika diperlukan
-            ]);
+
+            $formpelatihan = form_survey_reguler::where('id_pelatihan', $id_pelatihan)->first();
+            // dd($formpelatihan);
+            if ($formpelatihan) {
+                // Mendapatkan content dari objek form_evaluasi_permintaan
+                $formData = $formpelatihan->content;
+
+                //cek user sudah pernah mengisi form
+                $user_id = Auth::id();
+                $hasFilledForm = survey_pelatihan_reguler::where('id_pelatihan', $id_pelatihan)
+                    ->where('id_user', $user_id)
+                    ->exists();
+
+                return view('peserta.surveykepuasan.create', compact('hasFilledForm', 'id_konsultasi', 'id_permintaan', 'id_pelatihan', 'kembali', 'studi', 'hadir', 'evaluasi', 'survey', 'sertifikat'), [
+                    'permintaan' => $permintaan,
+                    'title' => 'Form Survey Kepuasan',
+                    'formData' => $formData,
+                    'negara' => negara::all(),
+                    'kabupaten_kota' => kabupaten_kota::all(),
+                    'provinsi' => provinsi::all()
+                ]);
+            } else {
+                // Set formData to null if formpelatihan is null
+                $formData = null;
+                return view('peserta.surveykepuasan.create', compact('id_konsultasi', 'id_permintaan', 'id_pelatihan', 'kembali', 'studi', 'hadir', 'evaluasi', 'survey', 'sertifikat'), [
+                    'permintaan' => $permintaan,
+                    'title' => 'Form Evaluasi Pelatihan',
+                    'formData' => $formData,
+                    'negara' => negara::all(),
+                    'kabupaten_kota' => kabupaten_kota::all(),
+                    'provinsi' => provinsi::all()
+                ]);
+            }
         } elseif ($id_permintaan !== null) {
             $kembali = route('peserta.pelatihan.show', ['id' => $id]);
             $studi = route('peserta.studidampak.create', ['id' => $id]);
@@ -85,83 +127,122 @@ class PesertaSurveyKepuasan extends Controller
             $evaluasi = route('peserta.evaluasi.create', ['id' => $id]);
             $survey = route('peserta.surveykepuasan.create', ['id' => $id]);
             $sertifikat = route('peserta.sertifikat.show', ['id' => $id]);
-           return view('peserta.surveykepuasan.create', compact('id_pelatihan', 'kembali', 'studi', 'hadir', 'evaluasi', 'survey','sertifikat'), [
-                'permintaan' => $permintaan,
-                'title' => 'Form Survey Kepuasan',
-                'negara' => negara::all(),
-                'kabupaten_kota' => kabupaten_kota::all(),
-                'provinsi' => provinsi::all()
-                // Kirim data tambahan jika diperlukan
-            ]);
+            $formpermintaan = form_survey_permintaan::where('id_permintaan', $id_permintaan)->first();
+            if ($formpermintaan) {
+                // Mendapatkan content dari objek form_evaluasi_permintaan
+                $formData = $formpermintaan->content;
+
+                //cek user sudah pernah mengisi form 
+                $user_id = Auth::id();
+                $hasFilledForm = survey_pelatihan_permintaan::where('id_permintaan', $id_permintaan)
+                    ->where('id_user', $user_id)
+                    ->exists();
+
+                return view('peserta.surveykepuasan.create', compact('hasFilledForm', 'id_konsultasi', 'id_permintaan', 'id_pelatihan', 'kembali', 'studi', 'hadir', 'evaluasi', 'survey', 'sertifikat'), [
+                    'permintaan' => $permintaan,
+                    'title' => 'Form Evaluasi Pelatihan',
+                    'formData' => $formData,
+                    'negara' => negara::all(),
+                    'kabupaten_kota' => kabupaten_kota::all(),
+                    'provinsi' => provinsi::all()
+                ]);
+            } else {
+                // Set formData to null if formpelatihan is null
+                $formData = null;
+                return view('peserta.surveykepuasan.create', compact('id_konsultasi', 'id_permintaan', 'id_pelatihan', 'kembali', 'studi', 'hadir', 'evaluasi', 'survey', 'sertifikat'), [
+                    'permintaan' => $permintaan,
+                    'title' => 'Form Evaluasi Pelatihan',
+                    'formData' => $formData,
+                    'negara' => negara::all(),
+                    'kabupaten_kota' => kabupaten_kota::all(),
+                    'provinsi' => provinsi::all()
+                ]);
+            }
+        } elseif ($id_konsultasi !== null) {
+            $kembali = route('peserta.pelatihan.show', ['id' => $id]);
+            $studi = route('peserta.studidampak.create', ['id' => $id]);
+            $hadir = route('peserta.daftarhadir.create', ['id' => $id]);
+            $evaluasi = route('peserta.evaluasi.create', ['id' => $id]);
+            $survey = route('peserta.surveykepuasan.create', ['id' => $id]);
+            $sertifikat = route('peserta.sertifikat.show', ['id' => $id]);
+            $formkonsultasi = form_survey_konsultasi::where('id_konsultasi', $id_konsultasi)->first();
+
+            if ($formkonsultasi) {
+                // Mendapatkan content dari objek form_evaluasi_konsultasi
+                $formData = $formkonsultasi->content;
+
+                //cek user sudah pernah mengisi form 
+                $user_id = Auth::id();
+                $hasFilledForm = survey_pelatihan_konsultasi::where('id_konsultasi', $id_konsultasi)
+                    ->where('id_user', $user_id)
+                    ->exists();
+
+                return view('peserta.surveykepuasan.create', compact('hasFilledForm', 'id_konsultasi', 'id_permintaan', 'id_pelatihan', 'id_konsultasi', 'kembali', 'studi', 'hadir', 'evaluasi', 'survey', 'sertifikat'), [
+                    'permintaan' => $permintaan,
+                    'title' => 'Form Evaluasi Pelatihan',
+                    'formData' => $formData,
+                    'negara' => negara::all(),
+                    'kabupaten_kota' => kabupaten_kota::all(),
+                    'provinsi' => provinsi::all()
+                ]);
+            } else {
+                // Set formData to null if formpelatihan is null
+                $formData = null;
+                return view('peserta.surveykepuasan.create', compact('id_konsultasi', 'id_konsultasi', 'id_permintaan', 'id_pelatihan', 'kembali', 'studi', 'hadir', 'evaluasi', 'survey', 'sertifikat'), [
+                    'permintaan' => $permintaan,
+                    'title' => 'Form Evaluasi Pelatihan',
+                    'formData' => $formData,
+                    'negara' => negara::all(),
+                    'kabupaten_kota' => kabupaten_kota::all(),
+                    'provinsi' => provinsi::all()
+                ]);
+            }
         } else {
             // Tangani kasus di mana tidak ditemukan pelatihan atau permintaan
             // Anda bisa menampilkan pesan kesalahan atau melakukan tindakan lain sesuai kebutuhan
         }
     }
-    // public function create($id)
-    // {
-    //     $id_pelatihan = pelatihan::where('id_pelatihan', '=', $id)->get();
-    //     $jsonString = json_encode($id_pelatihan);
-    //     $data = json_decode($jsonString);
-    //     $nilai = $data[0]->id_pelatihan;
-    //     $kembali = route('peserta.pelatihan.show', ['id' => $id]);
-    //     $studi = route('peserta.studidampak.create', ['id' => $id]);
-    //     $hadir = route('peserta.daftarhadir.create', ['id' => $id]);
-    //     $evaluasi = route('peserta.evaluasi.create', ['id' => $id]);
-    //     $survey = route('peserta.surveykepuasan.create', ['id' => $id]);
-    //     return view('peserta.surveykepuasan.create',  compact('id_pelatihan', 'nilai','kembali','studi','hadir','evaluasi','survey'),[
-    //         'title' => 'Form Survey Kepuasan',
-    //         'negara' => negara::all(),
-    //         'kabupaten_kota' => kabupaten_kota::all(),
-    //         'provinsi' => provinsi::all()
-    //     ]);
-    // }
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
-        // dd($request->all());
-        // $request->validate([
-        //     'tingkat_kepuasan' => 'required',
-        //     'relevansi_pekerjaan' => 'required',
-        //     'relevansi_biaya' => 'required',
-        //     'pembelajaran' => 'required',
-        //     'saran' => 'required',
-        //     'intensitas_pelatihan' => 'required',
-        //     'kabupaten_kota' => 'required',
-        //     'provinsi' => 'required',
-        //     'pelatihan_lembaga_lain' => 'required',
-        // ], [
-        //     'tingkat_kepuasan.required' => 'Field ini wajib diisi',
-        //     'relevansi_pekerjaan.required' => 'Field ini wajib diisi',
-        //     'relevansi_biaya.required' => 'Field ini wajib diisi',
-        //     'pembelajaran.required' => 'Field ini wajib diisi',
-        //     'saran.required' => 'Field ini wajib diisi',
-        //     'intensitas_pelatihan' => 'Field ini wajib diisi',
-        //     'kabupaten_kota' => 'Field ini wajib diisi',
-        //     'provinsi' => 'Field ini wajib diisi',
-        //     'pelatihan_lembaga_lain' => 'Field ini wajib diisi',
-        // ]);
-        $data = [
-            'id_user' => Auth::user()->id,
-            'id_pelatihan' => $request->id_pelatihan,
-            'tingkat_kepuasan' => $request->tingkat_kepuasan,
-            'relevansi_pekerjaan' => $request->relevansi_pekerjaan,
-            'relevansi_biaya' => $request->relevansi_biaya,
-            'pembelajaran' => $request->pembelajaran,
-            'saran' => $request->saran,
-            'intensitas_pelatihan' => $request->intensitas_pelatihan,
-            'id_negara' => $request->id_negara,
-            'id_provinsi' => $request->id_provinsi,
-            'id_kabupaten' => $request->id_kabupaten,
-            'pelatihan_lembaga_lain' => $request->pelatihan_lembaga_lain,
-        ];
-        dd($data);
-        Survey::create($data);
-        $id_pelatihan = $request->id_pelatihan;
-        return Redirect::route('peserta.pelatihan.show', ['id' => $id_pelatihan])->with('success', 'Berhasil mengisi studi dampak pelatihan');
+        $formSource = $request->input('form_source');
+        if ($formSource === 'pelatihan') {
+            // Proses data dari formulir pelatihan
+            $evaluasi_reguler = new survey_pelatihan_reguler();
+            $evaluasi_reguler->id_pelatihan = $request->id_pelatihan;
+            $evaluasi_reguler->id_provinsi = $request->id_provinsi;
+            $evaluasi_reguler->id_kabupaten_kota = $request->id_kabupaten;
+            $evaluasi_reguler->id_user = Auth::id();
+            $evaluasi_reguler->data_respons = $request->data_respons;
+            // dd($evaluasi_reguler);
+            $evaluasi_reguler->save();
+            return redirect()->route('peserta.surveykepuasan.create', ['id' => $request->id_pelatihan])->with('success', 'Terima Kasih Telah Mengisi Survey Kepuasan Pelatihan');
+        } elseif ($formSource === 'permintaan') {
+            $evaluasi_permintaan = new survey_pelatihan_permintaan();
+            $evaluasi_permintaan->id_permintaan = $request->id_permintaan;
+            $evaluasi_permintaan->id_provinsi = $request->id_provinsi;
+            $evaluasi_permintaan->id_kabupaten_kota = $request->id_kabupaten;
+            $evaluasi_permintaan->id_user = Auth::id();
+            $evaluasi_permintaan->data_respons = $request->data_respons;
+            // dd($evaluasi_permintaan);
+            $evaluasi_permintaan->save();
+            return redirect()->route('peserta.surveykepuasan.create', ['id' => $request->id_permintaan])->with('success', 'Terima Kasih Telah Mengisi Survey Kepuasan Pelatihan');
+        } elseif ($formSource === 'konsultasi') {
+            $evaluasi_konsultasi = new survey_pelatihan_konsultasi();
+            $evaluasi_konsultasi->id_konsultasi = $request->id_konsultasi;
+            $evaluasi_konsultasi->id_provinsi = $request->id_provinsi;
+            $evaluasi_konsultasi->id_kabupaten_kota = $request->id_kabupaten;
+            $evaluasi_konsultasi->id_user = Auth::id();
+            $evaluasi_konsultasi->data_respons = $request->data_respons;
+            // dd($evaluasi_konsultasi);
+            $evaluasi_konsultasi->save();
+            return redirect()->route('peserta.surveykepuasan.create', ['id' => $request->id_konsultasi])->with('success', 'Terima Kasih Telah Mengisi Survey Kepuasan Pelatihan');
+        } else {
+            // Penanganan kesalahan jika diperlukan
+        }
     }
 
     public function getProvinsi($negaraId = null)

@@ -2,64 +2,88 @@
 
 @section('container')
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Form Update Fasilitator</h1>
+        <h1 class="h2">Form Edit Fasilitator</h1>
     </div>
     <div class="col-lg-8 mb-4 ">
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                <form method="post" action="/dashboard/fasilitator/{{ $data->id}}">
+                <div class="d-flex justify-content-start">
+                    <h6 class="m-0 font-weight-bold text-success">Edit Fasilitator</h6>
+                </div>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ route('dashboard.fasilitator.update', $data->id_fasilitator) }}">
                     @method('PUT')
                     @csrf
+                    <input type="hidden" id="id_fasilitator" name="id_fasilitator" value="{{ $data->id_fasilitator }}">
                     <div class="form-group mb-2">
                         <label for="nama_fasilitator">Nama Fasilitator</label>
-                        <input type="text" class="form-control" value="{{ $data->nama_fasilitator }}"placeholder="Masukan Nama Fasilitator"
-                            name="nama_fasilitator">
+                        <input type="text" class="form-control" placeholder="Masukan Nama Fasilitator"
+                            name="nama_fasilitator" value="{{ old('nama_fasilitator', $data->nama_fasilitator) }}" required>
                     </div>
+
                     <div class="form-group mb-2">
-                        <label for="tempat_tgl_lahir">Tempat, Tanggal Lahir</label>
-                        <input type="text" class="form-control" value="{{ $data->tempat_tgl_lahir }}" placeholder="Masukan Tempat dan Tanggal lahir"
-                            name="tempat_tgl_lahir">
+                        <label for="nik">NIK</label>
+                        <input type="text" class="form-control" placeholder="Masukan NIK" name="nik"
+                            value="{{ old('nik', $data->nik) }}" required>
                     </div>
+
                     <div class="form-group mb-2">
                         <label for="email_fasilitator">Email</label>
-                        <input type="email" class="form-control" value="{{ $data->email_fasilitator }}" placeholder="Masukan Email Anda"
-                            name="email_fasilitator">
+                        <input type="email" class="form-control" placeholder="Masukan Email Anda"
+                            name="email_fasilitator" value="{{ old('email_fasilitator', $data->email_fasilitator) }}" required>
                     </div>
+
                     <div class="form-group mb-2">
                         <label for="nomor_telepon">Nomor Telepon</label>
-                        <input type="text" class="form-control" value="{{ $data->nomor_telepon }}"placeholder="Masukan Nomor Telepon Anda"
-                            name="nomor_telepon">
+                        <input type="text" class="form-control" placeholder="Masukan Nomor Telepon Anda"
+                            name="nomor_telepon" value="{{ old('nomor_telepon', $data->nomor_telepon) }}" required>
                     </div>
+
                     <div class="form-group mb-2">
                         <label for="alamat">Alamat</label>
-                        <input type="text" class="form-control"value="{{ $data->alamat }}" placeholder="Masukan Alamat" name="alamat">
+                        <input type="text" class="form-control" placeholder="Masukan Alamat" name="alamat" value="{{ old('alamat', $data->alamat) }}">
                     </div>
-                    {{-- <div class="form-group mb-2">
-                        <label for="id_gender">Gender</label>
-                        <select  name="id_gender" class="form-control">
-                            @foreach ($data as $item)
-                                <option value="{{ $item->id }}" {{ $item->id_gender == $item->id ? 'selected' : '' }}>{{ $item->nama_gender }}</option>
-                            @endforeach
+
+                    <div class="form-group mb-2">
+                        <label for="gender">Gender</label>
+                        <select class="form-control @error('gender') is-invalid @enderror" name="gender" required>
+                            <!-- Opsi jenis kelamin -->
+                            <option value="Laki-Laki" {{ old('gender', $data->jenis_kelamin) == 'Laki-Laki' ? 'selected' : '' }}>Laki-Laki</option>
+                            <option value="Perempuan" {{ old('gender', $data->jenis_kelamin) == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
+                            <option value="Transgender" {{ old('gender', $data->jenis_kelamin) == 'Transgender' ? 'selected' : '' }}>Transgender</option>
+                            <option value="Tidak ingin menyebutkan" {{ old('gender', $data->jenis_kelamin) == 'Tidak ingin menyebutkan' ? 'selected' : '' }}>Tidak ingin menyebutkan</option>
                         </select>
-                    </div> --}}
-                    {{-- <div class="form-group mb-2">
+                        @error('gender')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="form-group mb-2">
                         <label for="id_internal_eksternal">Fasilitator Internal atau Eksternal</label>
-                        <select value="{{ $data->id_internal_eksternal }}" id="internal_eksternal" class="form-control" name="id_internal_eksternal">
-                            @foreach ($data as $item)
-                                <option value="{{ $item->id_internal_eksternal }}">{{ $item->name }}</option>
+                        <select id="id_internal_eksternal" class="form-control" name="id_internal_eksternal">
+                            <option value="">Pilih jenis fasilitator</option>
+                            @foreach ($internal_eksternal as $item)
+                                <option value="{{ $item->id_internal_eksternal}}" {{ old('id_internal_eksternal', $data->internal_eksternal->id_internal_eksternal) == $item->id ? 'selected' : '' }}>
+                                    {{ $item->internal_eksternal }}
+                                </option>
                             @endforeach
                         </select>
-                    </div> --}}
-                    <div id="asal-lembaga" class="form-group mb-2" style="display: none">
-                        <label for="asal_lembaga">Asal Lembaga</label>
-                        <input type="text" class="form-control" value="{{ $data->asal_lembaga }}"placeholder="Masukan Asal lembaga" name="asal_lembaga">
                     </div>
-                    <div id="keahlian" class="mb-3" style="display: none">
+                    
+                    
+                    <div id="asal-lembaga" class="form-group mb-2">
+                        <label for="asal_lembaga">Asal Lembaga</label>
+                        <input type="text" class="form-control" placeholder="Masukan Asal lembaga" id="asal_lembaga"
+                            name="asal_lembaga" value="{{ old('asal_lembaga', $data->asal_lembaga) }}">
+                    </div>
+                    <div id="keahlian" class="mb-3">
                         <label for="body" class="form-label"> Tambahkan Keahlian</label>
-                        <input value="{{ $data->body }}" id="body" type="hidden" name="body">
+                        <input id="body" type="hidden" name="body" value="{{ old('body', $data->body) }}">
                         <trix-editor input="body"></trix-editor>
                     </div>
-                    <a class="btn btn-success" href="/dashboard/fasilitator"><i style="width:15px" data-feather="arrow-left"></i>Kembali</a>
+                    <a class="btn btn-success" href="/dashboard/fasilitator"><i style="width:15px"
+                            data-feather="arrow-left"></i>Kembali</a>
                     <button type="submit" class="btn btn-success">Simpan</button>
                 </form>
             </div>

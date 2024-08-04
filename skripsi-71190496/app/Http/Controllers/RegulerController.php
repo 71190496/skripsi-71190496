@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Tema;
 use App\Models\negara;
 use App\Models\provinsi;
 use App\Models\pelatihan;
@@ -11,9 +12,10 @@ use App\Models\kabupaten_kota;
 use App\Models\jenis_organisasi;
 use App\Models\informasi_pelatihan;
 use App\Http\Controllers\Controller;
-use App\Models\peserta_pelatihan_test;
-use App\Models\Tema;
+use App\Mail\RegulerMail;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use App\Models\peserta_pelatihan_test;
 use Illuminate\Support\Facades\Validator;
 
 class RegulerController extends Controller
@@ -55,7 +57,6 @@ class RegulerController extends Controller
         // Ambil data dengan pagination
         $data = $query->cursorPaginate(4);
 
-        // Periksa apakah data kosong setelah menerapkan filter bulan
         // Periksa apakah data kosong setelah menerapkan filter bulan
         if ($selectedMonth && $data->isEmpty()) {
             // Jika tidak ada pelatihan untuk bulan yang dipilih, kirim pesan khusus ke view
@@ -101,6 +102,48 @@ class RegulerController extends Controller
         ]);
     }
 
+    public function createEmail(Request $request)
+    {
+        $id = session('id_pelatihan');  // Ambil $id dari session
+        $id_pelatihan = pelatihan::with('fasilitator_pelatihan')->where('id_pelatihan', '=', $id)->get(); // Ambil pelatihan berdasarkan $id
+        $jsonString = json_encode($id_pelatihan);
+        $data = json_decode($jsonString);
+        $nilai = $data[0]->id_pelatihan;
+        $user = auth()->user();
+        $data = pelatihan::where('id_pelatihan', $id)->get();
+        return view('peserta.reguler.createemail', compact('id_pelatihan', 'data', 'nilai', 'user'), [
+            'title' => 'Form Pelatihan Reguler',
+            'pelatihan' => $id_pelatihan, 
+
+        ]);
+    }
+
+    public function sendEmail(Request $request)
+    {
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email',
+            'subject' => 'required',
+            'message' => 'required',
+        ], [
+            'name.required' => 'Field nama wajib diisi',
+            'email.required' => 'Field email wajib diisi',
+            'subject.required' => 'Field subjek wajib diisi',
+            'message.required' => 'Field pesan wajib diisi'
+        ]);
+
+        $data = [
+            'name' => $request->name,
+            'email' => $request->email,
+            'subject' => $request->subject,
+            'message' => $request->message,
+        ];
+
+        Mail::to('john.julius@ti.ukdw.ac.id')->send(new RegulerMail($data));
+
+        return back()->with('success', 'Pesan anda telah terkirim. Terima Kasih!');
+    }
+
     /**
      * Store a newly created resource in storage.
      */
@@ -118,19 +161,19 @@ class RegulerController extends Controller
             'id_negara' => 'required|integer',
             'id_provinsi' => 'required|integer',
             'id_kabupaten' => 'required|integer',
-            'nama_organisasi' => 'nullable|string|max:255',
+            'nama_organisasi' => 'required|string|max:255',
             'id_organisasi' => 'required|integer',
-            'jabatan_peserta' => 'nullable|string|max:255',
+            'jabatan_peserta' => 'required|string|max:255',
             'id_informasi' => 'required|integer',
-            'pelatihan_relevan' => 'nullable|string|max:255',
-            'bukti_bayar' => 'required|image|max:2048',
+            'pelatihan_relevan' => 'required|string|max:255',
+            // 'bukti_bayar' => 'required|image|max:2048',
             'harapan_pelatihan' => 'required',
         ], [
             'nama_peserta.required' => 'Nama peserta harus diisi.',
             'email_peserta.required' => 'Email peserta harus diisi.',
             'email_peserta.email' => 'Email peserta harus valid.',
             'no_hp.required' => 'Nomor HP harus diisi.',
-            'no_hp.numeric' => 'Nomor HP harus diisi dengan angka.',
+            'no_hp.numeric' => 'Field ini harus diisi dengan angka.',
             'gender.required' => 'Jenis kelamin harus diisi.',
             'id_rentang_usia.required' => 'Rentang usia harus diisi.',
             'id_negara.required' => 'Negara harus diisi.',
@@ -138,10 +181,12 @@ class RegulerController extends Controller
             'id_kabupaten.required' => 'Kabupaten harus diisi.',
             'id_organisasi.required' => 'Organisasi harus diisi.',
             'id_informasi.required' => 'Informasi harus diisi.',
-            'bukti_bayar.required' => 'Bukti pembayaran harus diunggah.',
-            'bukti_bayar.image' => 'Bukti pembayaran harus berupa gambar.',
-            'bukti_bayar.max' => 'Bukti pembayaran tidak boleh lebih dari 2MB.',
+            // 'bukti_bayar.required' => 'Bukti pembayaran harus diunggah.',
+            // 'bukti_bayar.image' => 'Bukti pembayaran harus berupa gambar.',
+            // 'bukti_bayar.max' => 'Bukti pembayaran tidak boleh lebih dari 2MB.',
             'harapan_pelatihan.required' => 'Harapan pelatihan harus diisi.',
+            'pelatihan_relevan.required' => 'Kolom ini harus diisi.',
+            'jabatan_peserta.required' => 'Kolom ini harus diisi.',
             // 'harapan_pelatihan.max' => 'Harapan pelatihan maksimal hanya 255 karakter.',
         ]);
 
@@ -168,16 +213,16 @@ class RegulerController extends Controller
         // dd($pelatihan);
 
         // Simpan file bukti bayar
-        if ($request->hasFile('bukti_bayar')) {
-            $buktiBayarFile = $request->file('bukti_bayar');
-            $originalName = $buktiBayarFile->getClientOriginalName(); // Dapatkan nama asli file
+        // if ($request->hasFile('bukti_bayar')) {
+        //     $buktiBayarFile = $request->file('bukti_bayar');
+        //     $originalName = $buktiBayarFile->getClientOriginalName(); // Dapatkan nama asli file
 
-            // Simpan file dengan nama asli
-            $buktiBayarPath = $buktiBayarFile->storeAs('bukti_bayar', $originalName);
+        //     // Simpan file dengan nama asli
+        //     $buktiBayarPath = $buktiBayarFile->storeAs('bukti_bayar', $originalName);
 
-            // Simpan path file ke dalam model Pelatihan
-            $pelatihan->bukti_bayar = $buktiBayarPath;
-        }
+        //     // Simpan path file ke dalam model Pelatihan
+        //     $pelatihan->bukti_bayar = $buktiBayarPath;
+        // }
 
         // dd($pelatihan);
         $pelatihan->save();

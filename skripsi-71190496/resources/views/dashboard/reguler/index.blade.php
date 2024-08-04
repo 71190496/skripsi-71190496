@@ -8,7 +8,7 @@
                 Tambah Pelatihan</a>
         </div>
     </div>
-    {{-- @if (Session::has('success'))
+    @if (Session::has('success'))
         <div class="pt-3">
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 {{ Session::get('success') }}
@@ -17,7 +17,7 @@
                 </button>
             </div>
         </div>
-    @endif --}}
+    @endif
     <div class="col-lg-18 mb-4 ">
         {{-- <div class="container"> --}}
 
@@ -50,13 +50,13 @@
                                             class="btn btn-primary px-2"><i style="width:17px" data-feather="eye"></i></a>
                                         <a href="{{ url('dashboard/reguler/' . $item->id_pelatihan . '/edit') }}"
                                             class="btn btn-warning px-2"><i style="width:17px" data-feather="edit"></i></a>
-                                        <form class="d-inline m-0"action="/dashboard/reguler/{{ $item->id_pelatihan }}"
+                                        <form class="d-inline m-0" action="/dashboard/reguler/{{ $item->id_pelatihan }}"
                                             method="post">
-                                            @csrf
                                             @method('DELETE')
-                                            <button class="btn btn-danger px-2" type="submit"><i style="width:17px"
-                                                    data-feather="trash"></i>
-                                            </button>
+                                            @csrf
+                                            <button class="btn btn-danger px-2" type="submit"
+                                                onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')"><i
+                                                    style="width:17px" data-feather="trash"></i></button>
 
                                         </form>
                                     </td>

@@ -13,7 +13,7 @@ class ProfilController extends Controller
     public function index()
     {
         return view('peserta.profil.index',[
-            'title' => 'Profil'
+            'title' => 'Profil Saya'
         ]);
     }
 
@@ -30,7 +30,9 @@ class ProfilController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        return view('peserta.profil.create',[
+            'title' => 'Profil Saya'
+        ]);
     }
 
     /**

@@ -28,7 +28,360 @@
 
                     <div class="col-lg-8 entries">
                         <article class="entry entry-single">
-                            @if (isset($pertanyaanJawaban) && count($pertanyaanJawaban) > 0)
+                            @if (Session::has('success'))
+                                <div class="pt-3">
+                                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                        {{ Session::get('success') }}
+                                        {{-- <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button> --}}
+                                    </div>
+                                </div>
+                            @endif
+                            @if ($id_pelatihan && is_string($formData))
+                                @if (!$hasFilledForm)
+                                    <div class="php-email-form mb-3">
+                                        <h2 class="entry-title">
+                                            Form Evaluasi Pelatihan
+                                        </h2>
+
+                                        <div class="entry-content">
+                                            <p>Evaluasi Pelatihan ini akan membantu kami untuk meningkatkan kualitas
+                                                pelatihan
+                                                serta memenuhi kebutuhan
+                                                dan permintaan anda.</p>
+                                            <p>Silahkan menilai dan memberi komentar untuk hal-hal berikut :</p>
+                                        </div>
+                                    </div>
+                                    <!-- Menampilkan formulir evaluasi jika $formData adalah string (data yang valid) -->
+                                    <form id="form-eval" action="{{ route('evaluasi.store') }}" method="POST">
+                                        @csrf
+                                        <!-- Tambahkan input hidden dengan nilai dari $formData -->
+                                        {{-- <input type="hidden" name="formData" value="{{ $formData }}"> --}}
+                                        <!-- Tambahkan input lainnya sesuai kebutuhan -->
+                                        <input type="hidden" name="form_source" value="pelatihan">
+                                        <input type="hidden" id="data_respons" name="data_respons">
+                                        <input type="hidden" name="id_pelatihan" value="{{ $id_pelatihan }}">
+                                        <input type="hidden" id="id_user" name="id_user" value="{{ Auth::id() }}">
+                                        {{-- <input type="hidden" id="data_respons" name="data_respons"> --}}
+                                        {{-- <input type="submit" value="Submit" class="btn btn-success"> --}}
+                                        <div id="fb-render"></div>
+                                        <button id="save-button" class="btn btn-success" type="submit">Simpan</button>
+                                    </form>
+                                @else
+                                    <div class="php-email-form mb-3">
+                                        <div class="entry-content">
+                                            <p>Anda sudah mengisi formulir evaluasi.</p>
+                                        </div>
+                                    </div>
+                                @endif
+                            @elseif($id_permintaan && is_string($formData))
+                                @if (!$hasFilledForm)
+                                    <div class="php-email-form mb-3">
+                                        <h2 class="entry-title">
+                                            Form Evaluasi Pelatihan
+                                        </h2>
+
+                                        <div class="entry-content">
+                                            <p>Evaluasi Pelatihan ini akan membantu kami untuk meningkatkan kualitas
+                                                pelatihan
+                                                serta memenuhi kebutuhan
+                                                dan permintaan anda.</p>
+                                            <p>Silahkan menilai dan memberi komentar untuk hal-hal berikut :</p>
+                                        </div>
+                                    </div>
+                                    <!-- Menampilkan formulir evaluasi jika $formData adalah string (data yang valid) -->
+                                    <form id="form-eval" action="{{ route('evaluasi.store') }}" method="POST">
+                                        @csrf
+                                        <!-- Tambahkan input hidden dengan nilai dari $formData -->
+                                        {{-- <input type="hidden" name="formData" value="{{ $formData }}"> --}}
+                                        <!-- Tambahkan input lainnya sesuai kebutuhan -->
+                                        <input type="hidden" name="form_source" value="permintaan">
+                                        <input type="hidden" id="data_respons" name="data_respons">
+                                        <input type="hidden" name="id_permintaan" value="{{ $id_permintaan }}">
+                                        <input type="hidden" id="id_user" name="id_user" value="{{ Auth::id() }}">
+                                        <div id="fb-render"></div>
+                                        <button id="save-button" class="btn btn-success" type="submit">Simpan</button>
+                                    </form>
+                                @else
+                                    <div class="php-email-form mb-3">
+                                        <div class="entry-content">
+                                            <p>Anda sudah mengisi formulir evaluasi.</p>
+                                        </div>
+                                    </div>
+                                @endif
+                            @elseif($id_konsultasi && is_string($formData))
+                                @if (!$hasFilledForm)
+                                    <div class="php-email-form mb-3">
+                                        <h2 class="entry-title">
+                                            Form Evaluasi Pelatihan
+                                        </h2>
+
+                                        <div class="entry-content">
+                                            <p>Evaluasi Pelatihan ini akan membantu kami untuk meningkatkan kualitas
+                                                pelatihan
+                                                serta memenuhi kebutuhan
+                                                dan permintaan anda.</p>
+                                            <p>Silahkan menilai dan memberi komentar untuk hal-hal berikut :</p>
+                                        </div>
+                                    </div>
+                                    <!-- Menampilkan formulir evaluasi jika $formData adalah string (data yang valid) -->
+                                    <form id="form-eval" action="{{ route('evaluasi.store') }}" method="POST">
+                                        @csrf
+                                        <!-- Tambahkan input hidden dengan nilai dari $formData -->
+                                        {{-- <input type="hidden" name="formData" value="{{ $formData }}"> --}}
+                                        <!-- Tambahkan input lainnya sesuai kebutuhan -->
+                                        <input type="hidden" name="form_source" value="konsultasi">
+                                        <input type="hidden" id="data_respons" name="data_respons">
+                                        <input type="hidden" name="id_konsultasi" value="{{ $id_konsultasi }}">
+                                        <input type="hidden" id="id_user" name="id_user"
+                                            value="{{ Auth::id() }}">
+                                        <div id="fb-render"></div>
+                                        <button id="save-button" class="btn btn-success" type="submit">Simpan</button>
+                                    </form>
+                                @else
+                                    <div class="php-email-form mb-3">
+                                        <div class="entry-content">
+                                            <p>Anda sudah mengisi formulir evaluasi.</p>
+                                        </div>
+                                    </div>
+                                @endif
+                            @else
+                                <!-- Tampilkan pesan jika $formData tidak sesuai dengan yang diharapkan -->
+                                <div class="d-flex justify-content-center mt-5">
+                                    <img src="/img/stc1.png" class="img-fluid" alt="">
+                                </div>
+                                <div class="d-flex justify-content-center mt-3">
+                                    <strong>Belum ada form evaluasi.</strong>
+                                </div>
+                            @endif
+                        </article>
+                    </div>
+                </div>
+        </section>
+    </section>
+</main>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
+<script src="{{ asset('form-builder/form-render.min.js') }}"></script>
+<script>
+    jQuery(function($) {
+        var formData = {!! $formData !!}; // Menggunakan PHP Blade untuk menyisipkan data JSON
+        var fbRender = $('#fb-render');
+        var saveButton = $('#save-button');
+
+        // Render setiap field ke dalam div masing-masing
+        formData.forEach(function(field) {
+            // Buat div untuk menyimpan field
+            var fieldDiv = $('<div class="form-eval"></div>');
+
+            // Tambahkan header dan paragraph ke dalam satu div
+            if (field.type === 'header' || field.type === 'paragraph') {
+                var element = $('<' + field.type + '></' + field.type + '>').addClass('form-text').html(
+                    field.label);
+                fieldDiv.append(element);
+                // Tambahkan margin antara label dan input
+                fieldDiv.css('margin-bottom', '10px');
+            } else {
+                // Tambahkan label jika ada
+                if (field.label) {
+                    var label = $('<label></label>').html(field.label);
+                    // Tambahkan asterisk (*) jika field required
+                    if (field.required) {
+                        label.append($('<span>*</span>').css('color', 'red'));
+                    }
+                    fieldDiv.append(label);
+                }
+            }
+
+            // Tambahkan input field
+            switch (field.type) {
+                case 'text':
+                    var input = $('<input class="form-control"></input>').attr('type', field
+                        .type);
+                    // Tambahkan atribut lain jika diperlukan
+                    if (field.name) {
+                        input.attr('name', field.name);
+                    }
+                    if (field.required) {
+                        input.prop('required', true);
+                    }
+                    fieldDiv.append(input);
+                    break;
+                case 'textarea':
+                    var textarea = $('<textarea class="form-control form-eval"></textarea>');
+                    // Tambahkan atribut lain jika diperlukan
+                    if (field.name) {
+                        textarea.attr('name', field.name);
+                    }
+                    if (field.required) {
+                        textarea.prop('required', true);
+                    }
+                    fieldDiv.append(textarea);
+                    break;
+                case 'radio-group':
+                    // Buat div untuk menyimpan radio button
+                    var radioDiv;
+                    if (field.inline) {
+                        radioDiv = $('<div class="form-group"></div>');
+                    } else {
+                        radioDiv = $('<div></div>');
+                    }
+
+                    // Loop melalui nilai-nilai radio dan tambahkan ke radioDiv
+                    field.values.forEach(function(value) {
+                        var radio = $('<input class="form-check-input"></input>').attr('type',
+                            'radio').attr('name', field.name).val(value.value);
+                        if (field.required) {
+                            radio.prop('required', true);
+                        }
+                        var label = $('<label class="form-check-label"></label>').append(radio)
+                            .append(value.label);
+                        // Buat div baru dengan kelas 'form-check' untuk setiap pasangan radio button dan labelnya jika tidak dalam mode inline
+                        if (!field.inline) {
+                            var radioItemDiv = $('<div class="form-check"></div>');
+                            radioItemDiv.append(label);
+                            radioDiv.append(radioItemDiv);
+                        } else {
+                            if (field.inline) {
+                                label.addClass('form-check-inline');
+                            }
+                            radioDiv.append(label);
+                        }
+                    });
+                    // Tambahkan radioDiv ke dalam fieldDiv
+                    fieldDiv.append(radioDiv);
+                    break;
+                case 'check-group':
+                    var checkDiv;
+                    if (field.inline) {
+                        checkDiv = $('<div class="form-group"></div>');
+                    } else {
+                        checkDiv = $('<div></div>');
+                    }
+
+                    field.values.forEach(function(value) {
+                        var checkbox = $('<input class="form-check-input"></input>').attr(
+                            'type', 'checkbox').attr('name', field.name + '[]').val(value
+                            .value);
+                        if (field.required) {
+                            checkbox.prop('required', true);
+                        }
+                        var label = $('<label class="form-check-label"></label>').append(
+                            checkbox).append(value.label);
+
+                        if (!field.inline) {
+                            var checkItemDiv = $('<div class="form-check"></div>');
+                            checkItemDiv.append(label);
+                            checkDiv.append(checkItemDiv);
+                        } else {
+                            if (field.inline) {
+                                label.addClass('form-check-inline');
+                            }
+                            checkDiv.append(label);
+                        }
+                    });
+                    fieldDiv.append(checkDiv);
+                    break;
+
+                    // Untuk date field
+                case 'date':
+                    var dateInput = $('<input class="form-control"></input>').attr('type', 'date');
+                    // Tambahkan atribut lain jika diperlukan
+                    if (field.name) {
+                        dateInput.attr('name', field.name);
+                    }
+                    if (field.required) {
+                        dateInput.prop('required', true);
+                    }
+                    fieldDiv.append(dateInput);
+                    break;
+
+                    // Untuk select
+                case 'select':
+                    var select = $('<select class="form-control"></select>').attr('name', field.name);
+                    // Tambahkan atribut lain jika diperlukan
+                    if (field.required) {
+                        select.prop('required', true);
+                    }
+                    // Tambahkan opsi select
+                    field.values.forEach(function(option) {
+                        var optionElement = $('<option></option>').attr('value', option.value)
+                            .text(option.label);
+                        select.append(optionElement);
+                    });
+                    fieldDiv.append(select);
+                    break;
+
+                    // Untuk file upload
+                case 'file':
+                    var fileInput = $('<input class="form-control-file"></input>').attr('type', 'file');
+                    // Tambahkan atribut lain jika diperlukan
+                    if (field.name) {
+                        fileInput.attr('name', field.name);
+                    }
+                    if (field.required) {
+                        fileInput.prop('required', true);
+                    }
+                    fieldDiv.append(fileInput);
+                    break;
+
+                    // Untuk field input number
+                case 'number':
+                    var numberInput = $('<input class="form-control"></input>').attr('type', 'number');
+                    // Tambahkan atribut lain jika diperlukan
+                    if (field.name) {
+                        numberInput.attr('name', field.name);
+                    }
+                    if (field.required) {
+                        numberInput.prop('required', true);
+                    }
+                    fieldDiv.append(numberInput);
+                    break;
+
+                    // Handle jenis field lainnya sesuai kebutuhan
+            }
+
+            // Tambahkan field ke dalam div render
+            fbRender.append(fieldDiv);
+        });
+
+
+        $('#form-eval').on('submit', function() {
+            var userData = {}; // Data pengguna dari formulir
+
+            // Ambil nilai dari setiap input dan simpan dalam userData
+            $('#fb-render input, #fb-render textarea').each(function() {
+                var name = $(this).attr('name');
+                var value = $(this).val();
+
+                // Periksa apakah input adalah input radio dan apakah dipilih
+                if ($(this).is(':radio') && !$(this).is(':checked')) {
+                    // Jika input radio tidak dipilih, jangan masukkan ke dalam userData
+                    return; // Lanjutkan ke input berikutnya dalam loop
+                }
+
+                // Masukkan nilai input ke dalam userData
+                userData[name] = value;
+            });
+
+            // Mengubah data respons menjadi string JSON
+            var jsonData = JSON.stringify(userData);
+            $('#data_respons').val(jsonData);
+
+            console.log(jsonData);
+
+            // Lanjutkan pengiriman formulir
+            return true;
+        });
+
+    });
+</script>
+
+
+{{-- @if (isset($pertanyaanJawaban) && count($pertanyaanJawaban) > 0)
                                 <div class="php-email-form mb-3">
                                     <h2 class="entry-title">
                                         Form Evaluasi Pelatihan
@@ -407,6 +760,220 @@
                                     @endforeach
 
                                     <div class="form-eval" style="background-color: rgb(206, 206, 206)">
+                                        <h6 class="entry-content">Peserta</h6><br>
+                                        <p>Silahkan menilai dan memberi komentar untuk hal-hal berikut :</p>
+                                    </div>
+
+                                    <div class="form-survey">
+                                        <div
+                                            class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 ">
+                                            <h6 for="partisipasi_peserta" class="entry-content">Partisipasi Peserta
+                                            </h6>
+                                        </div>
+                                        <div class="mx-0 mx-sm-auto">
+                                            <div class="text-left mb-3">
+                                                <div class="d-inline mx-3">
+                                                    Kurang
+                                                </div>
+
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio"
+                                                        name="partisipasi_peserta" id="partisipasi_peserta"
+                                                        value="1" />
+                                                    <label class="form-check-label"
+                                                        for="partisipasi_peserta">1</label>
+                                                </div>
+
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio"
+                                                        name="partisipasi_peserta" id="partisipasi_peserta"
+                                                        value="2" />
+                                                    <label class="form-check-label"
+                                                        for="partisipasi_peserta">2</label>
+                                                </div>
+
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio"
+                                                        name="partisipasi_peserta" id="partisipasi_peserta"
+                                                        value="3" />
+                                                    <label class="form-check-label"
+                                                        for="partisipasi_peserta">3</label>
+                                                </div>
+
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio"
+                                                        name="partisipasi_peserta" id="partisipasi_peserta"
+                                                        value="4" />
+                                                    <label class="form-check-label"
+                                                        for="partisipasi_peserta">4</label>
+                                                </div>
+                                                <div class="d-inline me-4">
+                                                    Sangat Baik
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-survey">
+                                        <div
+                                            class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 ">
+                                            <h6 for="disiplin_peserta" class="entry-content">Disiplin Peserta</h6>
+                                        </div>
+                                        <div class="mx-0 mx-sm-auto">
+                                            <div class="text-left mb-3">
+                                                <div class="d-inline mx-3">
+                                                    Kurang
+                                                </div>
+
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio"
+                                                        name="disiplin_peserta" id="disiplin_peserta"
+                                                        value="1" />
+                                                    <label class="form-check-label" for="disiplin_peserta">1</label>
+                                                </div>
+
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio"
+                                                        name="disiplin_peserta" id="disiplin_peserta"
+                                                        value="2" />
+                                                    <label class="form-check-label" for="disiplin_peserta">2</label>
+                                                </div>
+
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio"
+                                                        name="disiplin_peserta" id="disiplin_peserta"
+                                                        value="3" />
+                                                    <label class="form-check-label" for="disiplin_peserta">3</label>
+                                                </div>
+
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio"
+                                                        name="disiplin_peserta" id="disiplin_peserta"
+                                                        value="4" />
+                                                    <label class="form-check-label" for="disiplin_peserta">4</label>
+                                                </div>
+                                                <div class="d-inline me-4">
+                                                    Sangat Baik
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-survey">
+                                        <div
+                                            class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 ">
+                                            <h6 for="kemampuan_menyerap_materi" class="entry-content">Kemampuan
+                                                Menyerap Materi</h6>
+                                        </div>
+                                        <div class="mx-0 mx-sm-auto">
+                                            <div class="text-left mb-3">
+                                                <div class="d-inline mx-3">
+                                                    Kurang
+                                                </div>
+
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio"
+                                                        name="kemampuan_menyerap_materi"
+                                                        id="kemampuan_menyerap_materi" value="1" />
+                                                    <label class="form-check-label"
+                                                        for="kemampuan_menyerap_materi">1</label>
+                                                </div>
+
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio"
+                                                        name="kemampuan_menyerap_materi"
+                                                        id="kemampuan_menyerap_materi" value="2" />
+                                                    <label class="form-check-label"
+                                                        for="kemampuan_menyerap_materi">2</label>
+                                                </div>
+
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio"
+                                                        name="kemampuan_menyerap_materi"
+                                                        id="kemampuan_menyerap_materi" value="3" />
+                                                    <label class="form-check-label"
+                                                        for="kemampuan_menyerap_materi">3</label>
+                                                </div>
+
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio"
+                                                        name="kemampuan_menyerap_materi"
+                                                        id="kemampuan_menyerap_materi" value="4" />
+                                                    <label class="form-check-label"
+                                                        for="kemampuan_menyerap_materi">4</label>
+                                                </div>
+                                                <div class="d-inline me-4">
+                                                    Sangat Baik
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-survey">
+                                        <div
+                                            class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 ">
+                                            <h6 for="keterbukaan_gagasan" class="entry-content">Keterbukaan Gagasan
+                                            </h6>
+                                        </div>
+                                        <div class="mx-0 mx-sm-auto">
+                                            <div class="text-left mb-3">
+                                                <div class="d-inline mx-3">
+                                                    Kurang
+                                                </div>
+
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio"
+                                                        name="keterbukaan_gagasan" id="keterbukaan_gagasan"
+                                                        value="1" />
+                                                    <label class="form-check-label"
+                                                        for="keterbukaan_gagasan">1</label>
+                                                </div>
+
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio"
+                                                        name="keterbukaan_gagasan" id="keterbukaan_gagasan"
+                                                        value="2" />
+                                                    <label class="form-check-label"
+                                                        for="keterbukaan_gagasan">2</label>
+                                                </div>
+
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio"
+                                                        name="keterbukaan_gagasan" id="keterbukaan_gagasan"
+                                                        value="3" />
+                                                    <label class="form-check-label"
+                                                        for="keterbukaan_gagasan">3</label>
+                                                </div>
+
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio"
+                                                        name="keterbukaan_gagasan" id="keterbukaan_gagasan"
+                                                        value="4" />
+                                                    <label class="form-check-label"
+                                                        for="keterbukaan_gagasan">4</label>
+                                                </div>
+                                                <div class="d-inline me-4">
+                                                    Sangat Baik
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-survey">
+                                        <div
+                                            class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 ">
+                                            <h6 for="catatan_peserta"class="text-left">CATATAN :
+                                                Apapun
+                                                nilai yang anda berikan di atas,
+                                                mohon diberikan
+                                                penjelasan dalam satu atau dua kalimat di bawah ini:</h6>
+                                        </div>
+                                        <div class="mb-3">
+                                            <textarea class="form-control" name="catatan_peserta" id="catatan_peserta" rows="3"></textarea>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-eval" style="background-color: rgb(206, 206, 206)">
                                         <h6 class="entry-content">Materi Pelatihan</h6><br>
                                         <p>Dari topik-topik pembahasan di bawah, manakah yang :</p>
                                     </div>
@@ -431,7 +998,228 @@
                                                 @endforeach
                                             @endif
                                         </div>
-                                    @endforeach 
+                                    @endforeach
+
+                                    <div class="form-eval" style="background-color: rgb(206, 206, 206)">
+                                        <h6 class="entry-content">Fasilitas</h6><br>
+                                        <p>Berikan penilaian terhadap fasilitas yang kami sediakan :</p>
+                                    </div>
+
+                                    <div class="form-survey">
+                                        <div
+                                            class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 ">
+                                            <h6 for="ruang_kelas" class="entry-content">Ruang Kelas</h6>
+                                        </div>
+                                        <div class="mx-0 mx-sm-auto">
+                                            <div class="text-left mb-3">
+                                                <div class="d-inline mx-3">
+                                                    Tidak Memuaskan
+                                                </div>
+
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="ruang_kelas"
+                                                        id="ruang_kelas" value="1" />
+                                                    <label class="form-check-label" for="ruang_kelas">1</label>
+                                                </div>
+
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="ruang_kelas"
+                                                        id="ruang_kelas" value="2" />
+                                                    <label class="form-check-label" for="ruang_kelas">2</label>
+                                                </div>
+
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="ruang_kelas"
+                                                        id="ruang_kelas" value="3" />
+                                                    <label class="form-check-label" for="ruang_kelas">3</label>
+                                                </div>
+
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="ruang_kelas"
+                                                        id="ruang_kelas" value="4" />
+                                                    <label class="form-check-label" for="ruang_kelas">4</label>
+                                                </div>
+
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="ruang_kelas"
+                                                        id="ruang_kelas" value="5" />
+                                                    <label class="form-check-label" for="ruang_kelas">5</label>
+                                                </div>
+                                                <div class="d-inline me-4">
+                                                    Sangat Memuaskan
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-survey">
+                                        <div
+                                            class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 ">
+                                            <h6 for="konsumsi" class="entry-content">Konsumsi</h6>
+                                        </div>
+                                        <div class="mx-0 mx-sm-auto">
+                                            <div class="text-left mb-3">
+                                                <div class="d-inline mx-3">
+                                                    Kurang Memuaskan
+                                                </div>
+
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="konsumsi"
+                                                        id="konsumsi" value="1" />
+                                                    <label class="form-check-label" for="konsumsi">1</label>
+                                                </div>
+
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="konsumsi"
+                                                        id="konsumsi" value="2" />
+                                                    <label class="form-check-label" for="konsumsi">2</label>
+                                                </div>
+
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="konsumsi"
+                                                        id="konsumsi" value="3" />
+                                                    <label class="form-check-label" for="konsumsi">3</label>
+                                                </div>
+
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="konsumsi"
+                                                        id="konsumsi" value="4" />
+                                                    <label class="form-check-label" for="konsumsi">4</label>
+                                                </div>
+
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="konsumsi"
+                                                        id="konsumsi" value="5" />
+                                                    <label class="form-check-label" for="konsumsi">5</label>
+                                                </div>
+                                                <div class="d-inline me-4">
+                                                    Sangat Memuaskan
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-survey">
+                                        <div
+                                            class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 ">
+                                            <h6 for="layanan_panitia" class="entry-content">Layanan Panitia</h6>
+                                        </div>
+                                        <div class="mx-0 mx-sm-auto">
+                                            <div class="text-left mb-3">
+                                                <div class="d-inline mx-3">
+                                                    Kurang Memuaskan
+                                                </div>
+
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio"
+                                                        name="layanan_panitia" id="layanan_panitia" value="1" />
+                                                    <label class="form-check-label" for="layanan_panitia">1</label>
+                                                </div>
+
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio"
+                                                        name="layanan_panitia" id="layanan_panitia" value="2" />
+                                                    <label class="form-check-label" for="layanan_panitia">2</label>
+                                                </div>
+
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio"
+                                                        name="layanan_panitia" id="layanan_panitia" value="3" />
+                                                    <label class="form-check-label" for="layanan_panitia">3</label>
+                                                </div>
+
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio"
+                                                        name="layanan_panitia" id="layanan_panitia" value="4" />
+                                                    <label class="form-check-label" for="layanan_panitia">4</label>
+                                                </div>
+
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio"
+                                                        name="layanan_panitia" id="layanan_panitia" value="5" />
+                                                    <label class="form-check-label" for="layanan_panitia">5</label>
+                                                </div>
+
+                                                <div class="d-inline me-4">
+                                                    Sangat Memuaskan
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-eval">
+                                        <div
+                                            class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-2 ">
+                                            <div class="text-left">
+                                                <p>
+                                                    Apa yang dapat dilakukan untuk memperbaiki pelatihan ini, baik
+                                                    konten/ materi pelatihan maupun fasilitas pelatihan ?
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="form-group mb-2">
+                                            <input type="text" class="form-control" placeholder="Jawaban Anda"
+                                                name="memperbaiki_pelatihan" id="memperbaiki_pelatihan">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-eval">
+                                        <div
+                                            class="d-flex justify-content-between flex-wrap flex-md-nowrap pt-3 pb-2 mb-3 ">
+                                            <span for="rekomendasi_peserta"class="text-left">Saya akan merekomendasikan orang lain untuk mengikuti pelatihan ini
+                                            </span>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio"
+                                                name="rekomendasi_peserta" id="rekomendasi_peserta" value="Ya" />
+                                            <label class="form-check-label" for="rekomendasi_peserta">Ya</label>
+                                        </div>
+
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio"
+                                                name="rekomendasi_peserta" id="rekomendasi_peserta" value="Tidak" />
+                                            <label class="form-check-label" for="rekomendasi_peserta">Tidak</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-eval">
+                                        <div
+                                            class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-2 ">
+                                            <div class="text-left">
+                                                <p>
+                                                    Jika ya, sebutkan nama, lembaga dan kontak yang bisa dihubungi:
+
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="form-group mb-2">
+                                            <input type="text" class="form-control" placeholder="Jawaban Anda"
+                                                name="kontak" id="kontak">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-eval">
+                                        <div
+                                            class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 ">
+                                            <span for="hal_yang_dipelajari"class="text-left">
+                                                Hal yang paling utama yang saya dapatkan / pelajari dari pelatihan ini </span>
+                                        </div>
+                                        <div class="mb-3">
+                                            <textarea class="form-control" name="hal_yang_dipelajari" id="hal_yang_dipelajari" rows="3"></textarea>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-eval">
+                                        <div
+                                            class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 ">
+                                            <span for="pelatihan_dibutuhkan"class="text-left">
+                                                Pelatihan apa yang masih saya butuhkan utuk mendukung pekerjaan saya ? </span>
+                                        </div>
+                                        <div class="mb-3">
+                                            <textarea class="form-control" name="pelatihan_dibutuhkan" id="pelatihan_dibutuhkan" rows="3"></textarea>
+                                        </div>
+                                    </div>
+
                                     <button class="btn btn-success" type="submit">Simpan</button>
                                 </form>
                             @else
@@ -442,10 +1230,10 @@
                                 <div class="d-flex justify-content-center mt-3">
                                     <strong>Belum ada Evaluasi Pelatihan.</strong>
                                 </div>
-                            @endif
+                            @endif --}}
 
 
-                            {{-- <div class="form-survey pagination">
+{{-- <div class="form-survey pagination">
                                         @if ($fasilitators->currentPage() > 1)
                                         <a href="{{ $fasilitators->url($fasilitators->currentPage() - 1) }}">Previous</a>
                                         @endif
@@ -455,19 +1243,12 @@
                                         @endif
                                     </div> --}}
 
-                            <!-- Display pagination links with buttons -->
-                            {{-- <div class="form-survey pagination">
+<!-- Display pagination links with buttons -->
+{{-- <div class="form-survey pagination">
                                 <a href="{{ $fasilitators->links() }}">next</a>
                             </div> --}}
-                            {{-- {{ route('peserta.studidampak.store') }} --}}
-
-                        </article>
-                    </div>
-                </div>
-        </section>
-    </section>
-</main>
-
+{{-- {{ route('peserta.studidampak.store') }} --}}
+{{-- @foreach ($formpermintaan as $item) --}}
 {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function() {

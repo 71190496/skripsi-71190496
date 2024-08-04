@@ -104,8 +104,8 @@
     <!-- ======= Contact Section ======= -->
     <div class="map-section">
         <iframe style="border:0; width: 100%; height: 350px;"
-                src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d253029.6299746451!2d110.35717700000001!3d-7.727277999999999!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a59b8fe4e6201%3A0x15b92587dba99384!2sYayasan%20SATUNAMA%20Yogyakarta!5e0!3m2!1sid!2sus!4v1685039760103!5m2!1sid!2sus"
-                frameborder="0" allowfullscreen></iframe>
+            src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d253029.6299746451!2d110.35717700000001!3d-7.727277999999999!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a59b8fe4e6201%3A0x15b92587dba99384!2sYayasan%20SATUNAMA%20Yogyakarta!5e0!3m2!1sid!2sus!4v1685039760103!5m2!1sid!2sus"
+            frameborder="0" allowfullscreen></iframe>
     </div>
 
     <section id="contact" class="contact">
@@ -121,7 +121,7 @@
                                 <i class="bi bi-geo-alt"></i>
                                 <h4>Location:</h4>
                                 @foreach ($data as $item)
-                                <p>{{ $item->lokasi }}</p>
+                                    <p>{{ $item->lokasi }}</p>
                                 @endforeach
                             </div>
 
@@ -129,7 +129,7 @@
                                 <i class="bi bi-envelope"></i>
                                 <h4>Email:</h4>
                                 @foreach ($data as $item)
-                                <p>{{ $item->email }}</p>
+                                    <p>{{ $item->email }}</p>
                                 @endforeach
                             </div>
 
@@ -137,19 +137,30 @@
                                 <i class="bi bi-phone"></i>
                                 <h4>Call:</h4>
                                 @foreach ($data as $item)
-                                <p>{{ $item->telepon }}</p>
+                                    <p>{{ $item->telepon }}</p>
                                 @endforeach
                             </div>
                         </div>
                     </div>
-
                 </div>
-
             </div>
 
+
             <div class="row mt-5 justify-content-center" data-aos="fade-up">
+
                 <div class="col-lg-10">
-                    <form action="{{ route('peserta.kontak.email') }}" method="post" role="form" class="php-email-form rounded-2 border">
+                    @if (Session::has('success'))
+                        <div class="pt-3">
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                {{ Session::get('success') }}
+                                {{-- <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button> --}}
+                            </div>
+                        </div>
+                    @endif
+                    <form action="{{ route('peserta.kontak.email') }}" method="post" role="form"
+                        class="form-eval rounded-2 border">
                         @csrf
                         <div class="row">
                             <div class="col-md-6 form-group">
@@ -168,12 +179,13 @@
                         <div class="form-group mt-3">
                             <textarea class="form-control" name="message" rows="5" placeholder="Message" required></textarea>
                         </div>
-                        <div class="my-3">
+                        {{-- <div class="my-3">
                             <div class="loading">Loading</div>
                             <div class="error-message"></div>
                             <div class="sent-message">Your message has been sent. Thank you!</div>
+                        </div> --}}
+                        <div class="text-center"><button class="btn btn-success" type="submit">Kirim Pesan</button>
                         </div>
-                        <div class="text-center"><button type="submit">Send Message</button></div>
                     </form>
                 </div>
 

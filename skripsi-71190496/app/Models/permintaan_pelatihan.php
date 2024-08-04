@@ -17,6 +17,7 @@ class permintaan_pelatihan extends Model
         'jenis_pelatihan',
         'tanggal_waktu_mulai',
         'tanggal_waktu_selesai',
+        'no_pic',
         'masalah',
         'kebutuhan',
         'materi',

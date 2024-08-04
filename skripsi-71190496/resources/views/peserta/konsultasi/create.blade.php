@@ -20,7 +20,7 @@
             </div>
         </section><!-- End Breadcrumbs -->
 
-        @if ($errors->any())
+        {{-- @if ($errors->any())
             <div class="pt-3">
                 <div class="alert alert-danger">
                     <ul>
@@ -30,7 +30,19 @@
                     </ul>
                 </div>
             </div>
-        @endif()
+        @endif() --}}
+        @if (Session::has('success'))
+            <div class="container mt-3" data-aos="fade-up">
+                <div class="pt-3">
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        {{ Session::get('success') }}
+                        {{-- <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button> --}}
+                    </div>
+                </div>
+            </div>
+        @endif
 
         {{-- <div class="album py-2 px-2  mb-3">
             <div class="container" data-aos="fade-up">
@@ -121,79 +133,110 @@
         <section id="contact" class="contact">
             <div class="row mt-1 justify-content-center" data-aos="fade-up">
                 <div class="col-lg-10">
-                    <form method="post" action="/peserta/konsultasi" role="form" class="php-email-form">
-                        @csrf
-                        <h5 class="mt-3">Data Organisasi</h5>
-                        <div class="form-group mt-3">
-                            <h6>Nama Organisasi</h6>
-                            <input type="text" class="form-control" id="nama_mitra" name="nama_mitra"
-                                placeholder="Nama Organisasi" required>
-                        </div>
-
-                        <div class="form-group mt-3">
-                            <h6>Jenis Organisasi</h6>
-                            <select name="jenis_organisasi" id="jenis_organisasi" class="form-select">
-                                <option value="Pemerintah">Pemerintah</option>
-                                <option value="Lembaga Pendidikan">Lembaga Pendidikan</option>
-                                <option value="Komunitas">Komunitas</option>
-                                <option value="Organisasi Nirlaba">Organisasi Nirlaba</option>
-                                <option value="Perusahaan">Perusahaan</option>
-                                <option value="Partai Politik">Partai Politik</option>
-                            </select>
-                        </div>
-
-                        <div class="row mt-3"> 
-                            <div class="col-md-6 form-group">
-                                <h6>Email Organisasi</h6>
-                                <input id="email" type="email" class="form-control" placeholder=" Email"
-                                    name="email">
-                            </div> 
-                            <div class="col-md-6 form-group mt-3 mt-md-0">
-                                <h6>Nomor Telepon Organisasi</h6>
-                                <input id="no_hp" type="numeric" class="form-control"
-                                    placeholder="Nomor Telepon" name="no_hp">
+                    <div class="form-studi">
+                        <form method="post" action="/peserta/konsultasi" role="form">
+                            @csrf
+                            <h5 class="mt-3">Data Organisasi</h5>
+                            <div class="form-group mt-3">
+                                <h6>Nama Organisasi</h6>
+                                <input type="text" class="form-control @error('nama_organisasi') is-invalid @enderror"
+                                    id="nama_organisasi" name="nama_organisasi" placeholder="Nama Organisasi"
+                                    value="{{ old('nama_organisasi') }}">
+                                @error('nama_organisasi')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
-                        </div>
 
-                        <h5 class="mt-3">Alamat Organisasi</h5>
-                        <div class="row mt-3"> 
-                            <div class="col-md-4 form-group">
-                                <h6>Negara</h6>
-                                <select class="form-select" name="id_negara" id="id_negara">
-                                    <option value="">Pilih Negara</option>
-                                    @foreach ($negara as $item)
-                                        <option value="{{ $item['id'] }}">{{ $item['nama_negara'] }}</option>
-                                    @endforeach
+                            <div class="form-group mt-3">
+                                <h6>Jenis Organisasi</h6>
+                                <select name="jenis_organisasi" id="jenis_organisasi"
+                                    class="form-select @error('jenis_organisasi') is-invalid @enderror">
+                                    <option value="">Pilih jenis organisasi</option>
+                                    <option value="Pemerintah"
+                                        {{ old('jenis_organisasi') == 'Pemerintah' ? 'selected' : '' }}>Pemerintah</option>
+                                    <option value="Lembaga Pendidikan"
+                                        {{ old('jenis_organisasi') == 'Lembaga Pendidikan' ? 'selected' : '' }}>Lembaga
+                                        Pendidikan</option>
+                                    <option value="Komunitas"
+                                        {{ old('jenis_organisasi') == 'Komunitas' ? 'selected' : '' }}>Komunitas</option>
+                                    <option value="Organisasi Nirlaba"
+                                        {{ old('jenis_organisasi') == 'Organisasi Nirlaba' ? 'selected' : '' }}>Organisasi
+                                        Nirlaba</option>
+                                    <option value="Perusahaan"
+                                        {{ old('jenis_organisasi') == 'Perusahaan' ? 'selected' : '' }}>Perusahaan</option>
+                                    <option value="Partai Politik"
+                                        {{ old('jenis_organisasi') == 'Partai Politik' ? 'selected' : '' }}>Partai Politik
+                                    </option>
                                 </select>
-                            </div> 
-                            <div class="col-md-4 form-group mt-3 mt-md-0">
-                                <h6>Provinsi</h6>
-                                <select class="form-select" name="id_provinsi" id="id_provinsi">
-                                    <option value="">Pilih Provinsi</option> 
-                                </select>
+                                @error('jenis_organisasi')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
-                            <div class="col-md-4 form-group mt-3 mt-md-0">
-                                <h6>Kabupaten atau Kota</h6>
-                                <select class="form-select" name="id_kabupaten" id="id_kabupaten">
-                                    <option value="">Pilih Kota</option> 
-                                </select>
+
+                            <div class="row mt-3">
+                                <div class="col-md-6 form-group">
+                                    <h6>Email Organisasi</h6>
+                                    <input id="email" type="email"
+                                        class="form-control @error('email') is-invalid @enderror" placeholder=" Email"
+                                        name="email" value="{{ old('email') }}">
+                                    @error('email')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <div class="col-md-6 form-group mt-3 mt-md-0">
+                                    <h6>Nomor Telepon Organisasi</h6>
+                                    <input id="no_hp" type="tel" maxlength="12" 
+                                        class="form-control @error('no_hp') is-invalid @enderror"
+                                        placeholder="Nomor Telepon" name="no_hp" value="{{ old('no_hp') }}">
+                                    @error('no_hp')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
                             </div>
-                        </div>
- 
-                        <div class="form-group mt-3">
-                            <h6>Deskripsi Kebutuhan</h6>
-                            <textarea class="form-control" name="deskripsi_kebutuhan" rows="5" id="deskripsi_kebutuhan" placeholder="Deskripsi Kebutuhan" required></textarea>
-                        </div>
-                        <div class="my-3">
+
+                            <h5 class="mt-3">Alamat Organisasi</h5>
+                            <div class="row mt-3">
+                                <div class="col-md-4 form-group">
+                                    <h6>Negara</h6>
+                                    <select class="form-select" name="id_negara" id="id_negara">
+                                        <option value="">Pilih Negara</option>
+                                        @foreach ($negara as $item)
+                                            <option value="{{ $item['id'] }}">{{ $item['nama_negara'] }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-4 form-group mt-3 mt-md-0">
+                                    <h6>Provinsi</h6>
+                                    <select class="form-select" name="id_provinsi" id="id_provinsi">
+                                        <option value="">Pilih Provinsi</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4 form-group mt-3 mt-md-0">
+                                    <h6>Kabupaten atau Kota</h6>
+                                    <select class="form-select" name="id_kabupaten" id="id_kabupaten">
+                                        <option value="">Pilih Kota</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group mt-3">
+                                <h6>Deskripsi Kebutuhan</h6>
+                                <textarea class="form-control @error('deskripsi_kebutuhan') is-invalid @enderror" name="deskripsi_kebutuhan" rows="5"
+                                    id="deskripsi_kebutuhan" placeholder="Deskripsi Kebutuhan"></textarea>
+                                @error('deskripsi_kebutuhan')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            {{-- <div class="my-3">
                             <div class="loading">Loading</div>
                             <div class="error-message"></div>
                             <div class="sent-message">Your message has been sent. Thank you!</div>
-                        </div>
-                        <div class="text-center"><button type="submit">Submit</button></div>
-                    </form>
-                </div>
+                        </div> --}}
+                            <div class="text-center"><button type="submit" class="btn btn-success">Daftar</button></div>
+                        </form>
+                    </div>
 
-            </div>
+                </div>
         </section>
     </main>
 

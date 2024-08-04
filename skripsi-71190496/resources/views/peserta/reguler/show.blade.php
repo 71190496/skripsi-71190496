@@ -67,6 +67,9 @@
                                 <!-- Tanggal batas pendaftaran masih berlaku -->
                                 <a class="btn btn-success"
                                     href="{{ route('reguler.create', ['id_pelatihan' => $nilai]) }}">Daftar</a>
+                            @else
+                                <a class="btn btn-success"
+                                    href="{{ route('peserta.reguler.email', ['id' => $nilai]) }}">Tanya Pelatihan</a>
                             @endif
                         </div>
                     </div>

@@ -13,6 +13,9 @@
         <div class="pt-3">
             <div class="alert alert-success">
                 {{ Session::get('success') }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
         </div>
     @endif
@@ -46,11 +49,12 @@
                                         <td>Eksternal</td>
                                     @endif
                                     <td>
-                                        <a href="{{ route('dashboard.fasilitator.show', $item->id_fasilitator) }}" class="btn btn-primary px-2"><i style="width:17px"
-                                                data-feather="eye"></i></a>
-                                        <a href="{{ url('dashboard/fasilitator/' . $item->id . '/edit') }}"
+                                        <a href="{{ route('dashboard.fasilitator.show', $item->id_fasilitator) }}"
+                                            class="btn btn-primary px-2"><i style="width:17px" data-feather="eye"></i></a>
+                                        <a href="{{ url('dashboard/fasilitator/' . $item->id_fasilitator . '/edit') }}"
                                             class="btn btn-warning px-2"><i style="width:17px" data-feather="edit"></i></a>
-                                        <form class="d-inline m-0" action="/dashboard/fasilitator/{{ $item->id }}"
+                                        <form class="d-inline m-0"
+                                            action="{{ route('fasilitator.destroy', $item->id_fasilitator) }}"
                                             method="POST">
                                             @csrf
                                             @method('DELETE')
@@ -81,22 +85,20 @@
     <script>
         $(document).ready(function() {
             // Inisialisasi DataTable
-            $('#fasilitator').DataTable({ 
+            $('#fasilitator').DataTable({
                 lengthChange: true,
                 responsive: true,
-                paging: true, 
+                paging: true,
                 lengthMenu: [
                     [10, 25, 50, -1],
                     [10, 25, 50, 'All']
                 ],
                 rowReorder: true,
-                columnDefs: [
-                    {
-                        orderable: false,
-                        targets: 2
-                    }
-                ]
-            }); 
+                columnDefs: [{
+                    orderable: false,
+                    targets: 2
+                }]
+            });
         });
     </script>
 @endsection

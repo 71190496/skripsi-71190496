@@ -12,10 +12,11 @@ class fasilitator_pelatihan_test extends Model
     protected $primaryKey = 'id_fasilitator';
     protected $fillable = [
         'nama_fasilitator',
-        'tempat_tgl_lahir',
+        'nik',
         'email_fasilitator',
         'nomor_telepon',
         'alamat',
+        'jenis_kelamin',
         'id_gender',
         'id_internal_eksternal',
         'asal_lembaga',

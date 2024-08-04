@@ -49,13 +49,21 @@ class KonsultasiController extends Controller
         // Validasi formulir
         $request->validate([
             'nama_organisasi' => 'required|string|max:255',
-            // 'jenis_organisasi' => 'required|integer',
-            'email' => 'required|email|max:255',
-            'no_hp' => 'required|string|max:15',
-            // 'kabupaten_kota' => 'required|integer',
-            // 'id_provinsi' => 'required|integer',
-            // 'id_negara' => 'required|integer',
+            'jenis_organisasi' => 'required',
+            'email' => 'required|email:dns',
+            'no_hp' => 'required|numeric',
+            // 'kabupaten_kota' => 'required',
+            // 'id_provinsi' => 'required',
+            // 'id_negara' => 'required',
             'deskripsi_kebutuhan' => 'required|string',
+        ],
+        [
+            'nama_organisasi.required' => 'Nama Organisasi harus diisi.', 
+            'jenis_organisasi.required' => 'Jenis Organisasi harus dipilih.',
+            'email.required' => 'Email harus diisi.',
+            'email.email' => 'Email harus diisi dengan email yang  valid.',
+            'no_hp.numeric' => 'Nomor Telepon harus diisi dengan angka.',
+            'deskripsi_kebutuhan.required' => 'Deskripsi Pelatihan harus diisi.',
         ]);
         $id_user = Auth::user()->id;
         // Simpan data formulir ke dalam database
@@ -98,7 +106,7 @@ class KonsultasiController extends Controller
         // ];
 
         // Redirect atau berikan respons sesuai kebutuhan Anda
-        return redirect()->to('peserta/pelatihan')->with('success', 'Berhasil mendaftar');
+        return redirect()->to('peserta/konsultasi/create')->with('success', 'Terima Kasih Telah Mendaftar Pelatihan Konsultasi. Pelatihan Anda Segera Diproses');
     }
 
     public function getProvinsi($negaraId)

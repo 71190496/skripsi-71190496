@@ -1519,6 +1519,19 @@ section {
   border: 1px solid #1bbd36;
 }
 
+.contact .form-eval input,
+.contact .form-eval textarea {
+  border-radius: 0;
+  box-shadow: none;
+  font-size: 14px;
+  border-radius: 4px;
+}
+
+.contact .form-eval input:focus,
+.contact .form-eval textarea:focus {
+  border-color: #1bbd36;
+}
+
 .contact .form-eval .form-select:focus {
   outline: none;
   box-shadow: none;

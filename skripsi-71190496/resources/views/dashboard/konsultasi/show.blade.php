@@ -3,6 +3,16 @@
 @section('container')
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
         <h1 class="h2">Detail Konsultasi</h1>
+        <div class="d-flex justify-content-end">
+            @if ($showButtons)
+                @foreach ($data as $item)
+                    {{-- <a href="{{ route('dashboard.konsultasi.peserta', ['id' => $item]) }}" class="btn btn-success mx-1"><i style="width:17px" data-feather="plus"></i> Buatkan Akun Peserta</a> --}}
+                    <a href="{{ route('dashboard.konsultasi.create', ['id' => $item]) }}" class="btn btn-success mx-1"><i
+                            style="width:17px" data-feather="plus"></i> Buatkan Pelatihan</a>
+                @endforeach
+            @endif
+
+        </div>
     </div>
 
     <div class="card shadow mb-4">
@@ -11,7 +21,7 @@
         </div>
         <div class="card-body">
             <div class="table-responsive">
-                <table id="konsultasi" class="display responsive nowrap" width="100%">
+                <table id="konsultasi" class="display" cellspacing="0" width="100%">
                     <thead>
                         <tr>
                             <th>Nama Organisasi</th>
@@ -20,19 +30,19 @@
                             <th>Negara</th>
                             <th>Provinsi</th>
                             <th>Kabupaten/Kota</th>
-                            <th>Deskripsi Kebutuhan</th> 
+                            <th>Deskripsi Kebutuhan</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($data as $item) 
+                        @foreach ($data as $item)
                             <tr>
-                                <td class="editable">{{ $item['nama_organisasi'] }}</td>
-                                <td class="editable">{{ $item['email'] }}</td>
-                                <td class="editable">{{ $item['no_hp'] }}</td>
-                                <td class="editable">{{ $item->negara->nama_negara }}</td>  
-                                <td class="editable">{{ $item->provinsi->nama_provinsi }}</td>
-                                <td class="editable">{{ $item->kabupaten_kota->nama_kabupaten_kota }}</td> 
-                                <td class="editable">{{ $item->deskripsi_kebutuhan }}</td> 
+                                <td>{{ $item['nama_organisasi'] }}</td>
+                                <td>{{ $item['email'] }}</td>
+                                <td>{{ $item['no_hp'] }}</td>
+                                <td>{{ $item->negara->nama_negara }}</td>
+                                <td>{{ $item->provinsi->nama_provinsi }}</td>
+                                <td>{{ $item->kabupaten_kota->nama_kabupaten_kota }}</td>
+                                <td>{{ $item->deskripsi_kebutuhan }}</td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -56,7 +66,7 @@
     </script>
 
     <script>
-        $(document).ready(function() { 
+        $(document).ready(function() {
             // Inisialisasi DataTable
             $('#konsultasi').DataTable({
                 // dom: 'Bfrtip',
@@ -81,7 +91,7 @@
                 //     top1: 'searchBuilder'
                 // },
                 lengthChange: false,
-                // responsive: true,
+                responsive: true,
                 // fixedColumns: {
                 //     start: 1
                 // },
@@ -134,4 +144,3 @@
         });
     </script>
 @endsection
-

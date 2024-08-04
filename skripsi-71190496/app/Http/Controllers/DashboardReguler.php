@@ -60,9 +60,9 @@ class DashboardReguler extends Controller
                 'lokasi_pelatihan' => 'required|string',
                 'kuota_peserta' => 'required|integer',
                 'tanggal_pendaftaran' => 'required|date',
-                'tanggal_batas_pendaftaran' => 'required|date',
+                'tanggal_batas_pendaftaran' => 'required|date|after:tanggal_pendaftaran',
                 'tanggal_mulai' => 'required|date',
-                'tanggal_selesai' => 'required|date',
+                'tanggal_selesai' => 'required|date|after:tanggal_mulai',
                 'id_fasilitator' => 'required|array',
                 'image.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
                 'file.*' => 'required|mimes:pdf,doc,docx|max:2048',
@@ -72,8 +72,17 @@ class DashboardReguler extends Controller
                 'nama_pelatihan.required' => 'Kolom nama pelatihan wajib diisi.',
                 'id_tema.required' => 'Kolom tema wajib diisi.',
                 'id_tema.exists' => 'Tema yang dipilih tidak valid.',
+                'lokasi_pelatihan.required' => 'Kolom lokasi pelatihan wajib diisi.',
+                'tanggal_pendaftaran.required' => 'Tanggal pendaftaran harus diisi.',
+                'tanggal_batas_pendaftaran.required' => 'Tanggal batas pendaftaran harus diisi.',
+                'tanggal_batas_pendaftaran.after' => 'Tanggal batas pendaftaran harus setelah tanggal pendaftaran.',
+                'tanggal_mulai.required' => 'Tanggal mulai harus diisi.',
+                'tanggal_selesai.required' => 'Tanggal selesai harus diisi.',
+                'tanggal_selesai.after' => 'Tanggal selesai harus setelah tanggal mulai.',
                 'fee_pelatihan.required' => 'Kolom fee pelatihan wajib diisi.',
                 'fee_pelatihan.numeric' => 'Kolom fee pelatihan harus berupa angka.',
+                'deskripsi_pelatihan' => 'Kolom deskripsi pelatihan harus diisi.',
+                // 'image.*.max' => 'Poster tidak boleh lebih dari 2MB.',
             ]
         );
 
@@ -279,32 +288,32 @@ class DashboardReguler extends Controller
             ->get();
 
         // Ambil data UserPresensi yang sudah melakukan presensi
-        $dataHadir = UserPresensi::whereHas('presensi', function ($query) use ($id_pelatihan) {
-            $query->where('id_pelatihan', $id_pelatihan);
-        })->with(['presensi', 'user'])->get();
+        // $dataHadir = UserPresensi::whereHas('presensi', function ($query) use ($id_pelatihan) {
+        //     $query->where('id_pelatihan', $id_pelatihan);
+        // })->with(['presensi', 'user'])->get();
 
-        $presensiStatus = Hadir::where('id_pelatihan', $id_pelatihan)->value('status');
+        // $presensiStatus = Hadir::where('id_pelatihan', $id_pelatihan)->value('status');
 
         // Menyiapkan link unduhan file bukti bayar
-        $downloadLinks = [];
-        foreach ($data as $peserta) {
-            $buktiBayarPath = storage_path('app/' . $peserta->bukti_bayar);
-            $downloadLinks[$peserta->id] = file_exists($buktiBayarPath) ? route('download.bukti_bayar', ['id' => $peserta->id]) : null;
-        }
+        // $downloadLinks = [];
+        // foreach ($data as $peserta) {
+        //     $buktiBayarPath = storage_path('app/' . $peserta->bukti_bayar);
+        //     $downloadLinks[$peserta->id] = file_exists($buktiBayarPath) ? route('download.bukti_bayar', ['id' => $peserta->id]) : null;
+        // }
         // dd($data);
-        return view('dashboard.reguler.show', compact('data', 'dataHadir', 'presensiStatus', 'nama_pelatihan','downloadLinks'));
+        return view('dashboard.reguler.show', compact('data', 'dataHadir', 'presensiStatus', 'nama_pelatihan'));
     }
 
     public function downloadBuktiBayar($filename)
-{
-    $path = storage_path('app/public/bukti_bayar/' . $filename);
+    {
+        $path = storage_path('app/public/bukti_bayar/' . $filename);
 
-    if (file_exists($path)) {
-        return response()->download($path, null, [], null, 'image/png');
-    } else {
-        abort(404);
+        if (file_exists($path)) {
+            return response()->download($path, null, [], null, 'image/png');
+        } else {
+            abort(404);
+        }
     }
-}
 
     public function aturPresensi($id_pelatihan, $aksi)
     {
@@ -374,9 +383,9 @@ class DashboardReguler extends Controller
                 'lokasi_pelatihan' => 'required|string',
                 'kuota_peserta' => 'required|integer',
                 'tanggal_pendaftaran' => 'required|date',
-                'tanggal_batas_pendaftaran' => 'required|date',
+                'tanggal_batas_pendaftaran' => 'required|date|after:tanggal_pendaftaran',
                 'tanggal_mulai' => 'required|date',
-                'tanggal_selesai' => 'required|date',
+                'tanggal_selesai' => 'required|date|after:tanggal_mulai',
                 'id_fasilitator' => 'required|array',
                 'image.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
                 'file.*' => 'required|mimes:pdf,doc,docx|max:2048',
@@ -386,8 +395,16 @@ class DashboardReguler extends Controller
                 'nama_pelatihan.required' => 'Kolom nama pelatihan wajib diisi.',
                 'id_tema.required' => 'Kolom tema wajib diisi.',
                 'id_tema.exists' => 'Tema yang dipilih tidak valid.',
+                'lokasi_pelatihan.required' => 'Kolom lokasi pelatihan wajib diisi.',
+                'tanggal_pendaftaran.required' => 'Tanggal pendaftaran harus diisi.',
+                'tanggal_batas_pendaftaran.required' => 'Tanggal batas pendaftaran harus diisi.',
+                'tanggal_batas_pendaftaran.after' => 'Tanggal batas pendaftaran harus setelah tanggal pendaftaran.',
+                'tanggal_mulai.required' => 'Tanggal mulai harus diisi.',
+                'tanggal_selesai.required' => 'Tanggal selesai harus diisi.',
+                'tanggal_selesai.after' => 'Tanggal selesai harus setelah tanggal mulai.',
                 'fee_pelatihan.required' => 'Kolom fee pelatihan wajib diisi.',
                 'fee_pelatihan.numeric' => 'Kolom fee pelatihan harus berupa angka.',
+                'deskripsi_pelatihan' => 'Kolom deskripsi pelatihan harus diisi.',
             ]
         );
 

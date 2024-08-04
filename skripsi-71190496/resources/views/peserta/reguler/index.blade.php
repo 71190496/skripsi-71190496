@@ -27,16 +27,14 @@
                     @if ($sortedData->isEmpty())
                         @if ($selectedMonth)
                             <div class="d-flex justify-content-center mt-5">
-                                <img src="http://satunama.org/wp-content/uploads/2023/06/Logo-STC-Satunama-Training-Center-768x408.png"
-                                    alt="" style="width: 150px; height: auto;">
+                                <img src="/img/stc1.png" class="img-fluid " alt="">
                             </div>
                             <div class="d-flex justify-content-center mt-3">
                                 <strong>Tidak ada pelatihan untuk bulan yang dipilih.</strong>
                             </div>
                         @else
                             <div class="d-flex justify-content-center mt-5">
-                                <img src="http://satunama.org/wp-content/uploads/2023/06/Logo-STC-Satunama-Training-Center-768x408.png"
-                                    alt="" style="width: 150px; height: auto;">
+                                <img src="/img/stc1.png" class="img-fluid " alt="">
                             </div>
                             <div class="d-flex justify-content-center mt-3">
                                 <strong>Belum ada pelatihan yang dibuka.</strong>

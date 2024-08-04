@@ -26,13 +26,13 @@
                         <li class="nav-item {{ Route::currentRouteName() == 'peserta.pelatihan.show' ? 'active' : '' }}">
                             <a class="nav-link" aria-current="page" href="{{ $kembali }}">Materi</a>
                         </li>
-                        <li class="nav-item {{ Route::currentRouteName() == 'peserta.sertifikat.show' ? 'active' : '' }}">
+                        {{-- <li class="nav-item {{ Route::currentRouteName() == 'peserta.sertifikat.show' ? 'active' : '' }}">
                             <a class="nav-link" aria-current="page" href="{{ $sertifikat }}">Sertifikat</a>
                         </li>
                         <li
                             class="nav-item {{ Route::currentRouteName() == 'peserta.daftarhadir.create' ? 'active' : '' }}">
                             <a class="nav-link" aria-current="page" href="{{ $hadir }}">Presensi</a>
-                        </li>
+                        </li> --}}
                         <li
                             class="nav-item {{ Route::currentRouteName() == 'peserta.evaluasi.create' ? 'active' : '' }}">
                             <a class="nav-link" href="{{ $evaluasi }}">Evaluasi Pelatihan</a>

@@ -50,24 +50,34 @@ class TemaController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Tema $tema)
+    public function edit($id)
     {
-        //
+        $tema = Tema::find($id);
+        return view('dashboard.tema.edit', compact('tema'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Tema $tema)
+    public function update(Request $request, $id)
     {
-        //
+        $tema = tema::findOrFail($id);
+        $tema->judul_tema = $request->judul_tema;
+        $tema->tanggal_dibuat = $request->tanggal_dibuat;
+        $tema->save();
+
+        return redirect()->to('dashboard/tema')->with('success', 'Berhasil mengupdate tema');
+
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Tema $tema)
+    public function destroy($id)
     {
-        //
+        $tema = Tema::find($id);
+        // dd($tema);
+        $tema->delete();
+        return redirect()->to('dashboard/tema')->with('success', 'Berhasil menghapus tema');
     }
 }

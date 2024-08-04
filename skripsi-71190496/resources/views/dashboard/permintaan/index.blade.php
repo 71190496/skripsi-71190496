@@ -2,12 +2,15 @@
 
 @section('container')
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 ">
-        <h1 class="h2">Daftar Permintaan</h1> 
+        <h1 class="h2">Daftar Permintaan</h1>
     </div>
     @if (Session::has('success'))
         <div class="pt-3">
             <div class="alert alert-success">
                 {{ Session::get('success') }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
         </div>
     @endif
@@ -35,10 +38,12 @@
                                 <tr>
                                     <td>{{ $item->mitra->nama_mitra }}</td>
                                     <td>{{ $item['judul_pelatihan'] }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($item->created_at)->locale('id')->isoFormat('D MMMM Y') }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($item->created_at)->locale('id')->isoFormat('D MMMM Y') }}
+                                    </td>
                                     <td class="d-flex justify-content-center">
                                         <a href="{{ route('dashboard.permintaan.show', $item->id) }}"
-                                            class="btn btn-primary px-2"><i style="width:17px" data-feather="eye"></i> Lihat Detail</a>
+                                            class="btn btn-primary px-2"><i style="width:17px" data-feather="eye"></i> Lihat
+                                            Detail</a>
                                     </td>
                                 </tr>
                             @endforeach
@@ -73,21 +78,22 @@
                             @foreach ($permintaan as $item)
                                 <tr>
                                     <td>{{ $item['nama_pelatihan'] }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($item->tanggal_mulai)->locale('id')->isoFormat('D MMMM') }} - 
-                                        {{ \Carbon\Carbon::parse($item->tanggal_selesai)->locale('id')->isoFormat('D MMMM Y') }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($item->tanggal_mulai)->locale('id')->isoFormat('D MMMM') }}
+                                        -
+                                        {{ \Carbon\Carbon::parse($item->tanggal_selesai)->locale('id')->isoFormat('D MMMM Y') }}
+                                    </td>
                                     <td>
                                         <a href="{{ route('dashboard.permintaan.detail', $item->id) }}"
                                             class="btn btn-primary px-2"><i style="width:17px" data-feather="eye"></i></a>
-                                        <a href="{{ url('dashboard/permintaan/' . $item->id_permintaan . '/edit') }}"
+                                        <a href="{{ url('dashboard/permintaan/' . $item->id . '/edit') }}"
                                             class="btn btn-warning px-2"><i style="width:17px" data-feather="edit"></i></a>
-                                        <form class="d-inline m-0"action="/dashboard/permintaan/{{ $item->id_permintaan }}"
-                                            method="post">
+                                        <form class="d-inline m-0"
+                                            action="{{ route('dashboard.permintaan.destroy', $item->id) }}" method="post">
                                             @csrf
                                             @method('DELETE')
-                                            <button class="btn btn-danger px-2" type="submit"><i style="width:17px"
-                                                    data-feather="trash"></i>
-                                            </button>
-
+                                            <button class="btn btn-danger px-2" type="submit"
+                                                onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')"><i
+                                                    style="width:17px" data-feather="trash"></i></button>
                                         </form>
                                     </td>
                                 </tr>

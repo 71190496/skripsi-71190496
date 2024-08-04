@@ -13,19 +13,42 @@
         </div>
         <div class="card-body">
             <div class="table-responsive">
-                @if ($fasilitator)
-                    @foreach ($fasilitator as $item)
-                        <p>Nama = {{ $item->nama_fasilitator }}</p>
-                        <p>Tempat & Tanggal Lahir = {{ $item['tempat_tgl_lahir'] }}</p>
-                        <p>Email = {{ $item['email_fasilitator'] }}</p>
-                        <p>Alamat = {{ $item['alamat'] }}</p>
-                        <p>Jenis Kelamin = {{ $item['id_gender'] }}</p>
-                        <p>Asal Lembaga  = {{ $item['asal_lembaga'] }}</p>
-                        <p>Deskripsi Fasilitator = {!! $item['body'] !!}</p>
-                    @endforeach
-                @else
-                    <p>Tidak ada data fasilitator yang ditemukan.</p>
-                @endif
+                <table class="table table-bordered">
+                    @if ($fasilitator)
+                        @foreach ($fasilitator as $item)
+                            <tr>
+                                <th>Nama : </th>
+                                <td>{{ $item->nama_fasilitator }}</td>
+                            </tr>
+                            <tr>
+                                <th>NIK : </th>
+                                <td>{{ $item['nik'] }}</td>
+                            </tr> 
+                            <tr>
+                                <th>Email : </th>
+                                <td>{{ $item['email_fasilitator'] }}</td>
+                            </tr> 
+                            <tr>
+                                <th>Alamat : </th>
+                                <td>{{ $item['alamat'] }}</td>
+                            </tr>  
+                            <tr>
+                                <th>Jenis Kelamin : </th>
+                                <td>{{ $item['jenis_kelamin'] }}</td>
+                            </tr>  
+                            <tr>
+                                <th>Asal Lembaga : </th>
+                                <td>{{ $item['asal_lembaga'] }}</td>
+                            </tr>  
+                            <tr>
+                                <th>Deskripsi Fasilitator : </th>
+                                <td>{!! $item['body'] !!}</td>
+                            </tr>   
+                        @endforeach
+                    @else
+                        <p>Tidak ada data fasilitator yang ditemukan.</p>
+                    @endif
+                </table>
 
                 {{-- <table class="table table-bordered table-sm">
                     <thead>

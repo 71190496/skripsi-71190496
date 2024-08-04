@@ -59,15 +59,16 @@ Route::post('/dashboard/reguler/upload/image', [DashboardReguler::class, 'upload
 Route::post('/dashboard/reguler/upload/file', [DashboardReguler::class, 'uploadFile'])->name('dashboard.reguler.upload.file');
 Route::get('/download/{filename}', [DashboardReguler::class, 'downloadBuktiBayar'])->name('download.bukti_bayar');
 
-route::get('/dashboard/reguler', [DashboardReguler::class, 'index'])->name('dashboard.reguler.index');
+route::get('/dashboard/reguler', [DashboardReguler::class, 'index'])->middleware('auth')->name('dashboard.reguler.index');
 Route::get('/dashboard/reguler/presensi/{id_pelatihan}/{aksi}', [DashboardReguler::class, 'aturPresensi'])
     ->name('dashboard.reguler.presensi');
 Route::get('/dashboard/reguler/{id}', [DashboardReguler::class, 'show'])->name('dashboard.reguler.show');
-route::resource('/dashboard/permintaan', DashboardPermintaan::class)->except(['create']);
+route::resource('/dashboard/permintaan', DashboardPermintaan::class)->except(['create', 'destroy']);
+Route::delete('/dashboard/permintaan/{id}', [DashboardPermintaan::class, 'destroy'])->name('dashboard.permintaan.destroy');
 route::get('/dashboard/permintaan/{id}/create', [DashboardPermintaan::class, 'create'])->name('dashboard.permintaan.create');
 route::get('/dashboard/permintaan/{id}/peserta', [DashboardPermintaan::class, 'peserta'])->name('dashboard.permintaan.peserta');
 route::post('/dashboard/permintaan/simpan', [DashboardPermintaan::class, 'simpan'])->name('dashboard.permintaan.simpan');
-route::get('/dashboard/permintaan', [DashboardPermintaan::class, 'index'])->name('dashboard.permintaan.index');
+route::get('/dashboard/permintaan', [DashboardPermintaan::class, 'index'])->middleware('auth')->name('dashboard.permintaan.index');
 Route::get('/dashboard/permintaan/{id}', [DashboardPermintaan::class, 'show'])->name('dashboard.permintaan.show');
 Route::get('/dashboard/permintaan/{id}/detail', [DashboardPermintaan::class, 'detail'])->name('dashboard.permintaan.detail');
 Route::get('export/pelatihan/{id_pelatihan}', [DashboardDaftarPelatihan::class, 'exportPelatihan'])->name('export.pelatihan');
@@ -79,18 +80,78 @@ Route::get('export/daftarhadir/{id_pelatihan}', [DashboardDaftarHadir::class, 'e
 // route::get('/dashboard/evaluasi', DashboardEvaluasi::class);  
 Route::get('/dashboard/evaluasi', [DashboardEvaluasi::class, 'index'])->name('dashboard.evaluasi.index');
 Route::get('/dashboard/evaluasi/show/{id}', [DashboardEvaluasi::class, 'show'])->name('dashboard.evaluasi.show');
+Route::view('/dashboard/evaluasi/formEval', 'dashboard.evaluasi.createPermintaan');
+Route::get('/dashboard/evaluasi/showPermintaan/{id}', [DashboardEvaluasi::class, 'showPermintaan'])->name('dashboard.evaluasi.showPermintaan');
+Route::get('/dashboard/evaluasi/showKonsultasi/{id}', [DashboardEvaluasi::class, 'showKonsultasi'])->name('dashboard.evaluasi.showKonsultasi');
 Route::get('/dashboard/evaluasi/create/{id_pelatihan}', [DashboardEvaluasi::class, 'create'])->name('dashboard.evaluasi.create'); 
-Route::post('/dashboard/evaluasi', [DashboardEvaluasi::class, 'store'])->name('dashboard.evaluasi.store'); 
+Route::get('/dashboard/evaluasi/createPermintaan/{id}', [DashboardEvaluasi::class, 'createPermintaan'])->name('dashboard.evaluasi.createPermintaan'); 
+Route::get('/dashboard/evaluasi/createKonsultasi/{id}', [DashboardEvaluasi::class, 'createKonsultasi'])->name('dashboard.evaluasi.createKonsultasi'); 
+Route::post('/dashboard/evaluasi/saveform', [DashboardEvaluasi::class, 'store'])->name('dashboard.evaluasi.store'); 
+Route::post('/dashboard/evaluasi', [DashboardEvaluasi::class, 'storePermintaan'])->name('dashboard.evaluasi.storePermintaan'); 
+Route::post('/dashboard/evaluasi/savepermintaan', [DashboardEvaluasi::class, 'saveForm'])->name('dashboard.evaluasipermintaan.save');
+Route::post('/dashboard/evaluasi/savekonsultasi', [DashboardEvaluasi::class, 'saveFormKonsultasi'])->name('dashboard.evaluasikonsultasi.save');
+
+Route::view('/dashboard/evaluasi/edit-konsultasi/{id}', 'dashboard.evaluasi.editkonsultasi');
+Route::get('/dashboard/evaluasi/editkonsultasi/{id}', [DashboardEvaluasi::class, 'editKonsultasi'])->name('dashboard.evaluasi.editkonsultasi'); 
+Route::post('/dashboard/evaluasi/updatekonsultasi/{id}', [DashboardEvaluasi::class, 'updateKonsultasi'])->name('dashboard.evaluasi.updatekonsultasi');
+
+Route::view('/dashboard/evaluasi/edit-reguler/{id}', 'dashboard.evaluasi.editreguler');
+Route::get('/dashboard/evaluasi/editreguler/{id}', [DashboardEvaluasi::class, 'editReguler'])->name('dashboard.evaluasi.editreguler'); 
+Route::post('/dashboard/evaluasi/updatereguler/{id}', [DashboardEvaluasi::class, 'updateReguler'])->name('dashboard.evaluasi.updatereguler');
+
+Route::view('/dashboard/evaluasi/edit-permintaan/{id}', 'dashboard.evaluasi.editpermintaan');
+Route::get('/dashboard/evaluasi/editpermintaan/{id}', [DashboardEvaluasi::class, 'editPermintaan'])->name('dashboard.evaluasi.editpermintaan'); 
+Route::post('/dashboard/evaluasi/updatepermintaan/{id}', [DashboardEvaluasi::class, 'updatePermintaan'])->name('dashboard.evaluasi.updatepermintaan');
 // Route::post('/dashboard/evaluasi ', [DashboardEvaluasi::class, 'store'])->name('dashboard.evaluasi.store');
 
 route::resource('/dashboard/tema', TemaController::class);
 route::resource('/dashboard/kontak', DashboardKontak::class);
 
 route::resource('/dashboard/surveykepuasan', DashboardSurvey::class);
+Route::view('/dashboard/surveykepuasan/edit-reguler/{id}', 'dashboard.surveykepuasan.editreguler');
+Route::get('/dashboard/surveykepuasan/editreguler/{id}', [DashboardSurvey::class, 'editReguler'])->name('dashboard.surveykepuasan.editreguler'); 
+Route::post('/dashboard/surveykepuasan/updatereguler/{id}', [DashboardSurvey::class, 'updateReguler'])->name('dashboard.surveykepuasan.updatereguler');
+Route::get('/dashboard/surveykepuasan/create/{id}', [DashboardSurvey::class, 'create'])->name('dashboard.surveykepuasan.create');
 Route::get('/dashboard/surveykepuasan/show/{id}', [DashboardSurvey::class, 'show'])->name('dashboard.surveykepuasan.show');
+Route::post('/dashboard/surveykepuasan/savereguler', [DashboardSurvey::class, 'store'])->name('dashboard.surveykepuasan.storereguler');
+Route::get('/dashboard/surveykepuasan', [DashboardSurvey::class, 'index'])->name('dashboard.surveykepuasan.index');
+
+Route::view('/dashboard/surveykepuasan/edit-permintaan/{id}', 'dashboard.surveykepuasan.editpermintaan');
+Route::get('/dashboard/surveykepuasan/editpermintaan/{id}', [DashboardSurvey::class, 'editPermintaan'])->name('dashboard.surveykepuasan.editpermintaan'); 
+Route::post('/dashboard/surveykepuasan/updatepermintaan/{id}', [DashboardSurvey::class, 'updatePermintaan'])->name('dashboard.surveykepuasan.updatepermintaan');
+Route::get('/dashboard/surveykepuasan/showpermintaan/{id}', [DashboardSurvey::class, 'showPermintaan'])->name('dashboard.surveykepuasan.showpermintaan');
+Route::get('/dashboard/surveykepuasan/createpermintaan/{id}', [DashboardSurvey::class, 'createPermintaan'])->name('dashboard.surveykepuasan.createpermintaan');
+Route::post('/dashboard/surveykepuasan/savepermintaan', [DashboardSurvey::class, 'savePermintaan'])->name('dashboard.surveykepuasan.storepermintaan');
+
+Route::view('/dashboard/surveykepuasan/edit-konsultasi/{id}', 'dashboard.surveykepuasan.editkonsultasi');
+Route::get('/dashboard/surveykepuasan/editkonsultasi/{id}', [DashboardSurvey::class, 'editKonsultasi'])->name('dashboard.surveykepuasan.editkonsultasi'); 
+Route::post('/dashboard/surveykepuasan/updatekonsultasi/{id}', [DashboardSurvey::class, 'updateKonsultasi'])->name('dashboard.surveykepuasan.updatekonsultasi');
+Route::get('/dashboard/surveykepuasan/createkonsultasi/{id}', [DashboardSurvey::class, 'createKonsultasi'])->name('dashboard.surveykepuasan.createkonsultasi');
+Route::get('/dashboard/surveykepuasan/showkonsultasi/{id}', [DashboardSurvey::class, 'showkonsultasi'])->name('dashboard.surveykepuasan.showkonsultasi');
+Route::post('/dashboard/surveykepuasan/savekonsultasi', [DashboardSurvey::class, 'saveKonsultasi'])->name('dashboard.surveykepuasan.storekonsultasi');
 
 route::resource('/dashboard/studidampak', DashboardStudiDampak::class);
+Route::view('/dashboard/studidampak/edit-reguler/{id}', 'dashboard.studidampak.editreguler');
+Route::get('/dashboard/studidampak/editreguler/{id}', [DashboardStudiDampak::class, 'editReguler'])->name('dashboard.studidampak.editreguler'); 
+Route::post('/dashboard/studidampak/updatereguler/{id}', [DashboardStudiDampak::class, 'updateReguler'])->name('dashboard.studidampak.updatereguler');
+Route::get('/dashboard/studidampak', [DashboardStudiDampak::class, 'index'])->name('dashboard.studidampak.index');
+Route::get('/dashboard/studidampak/create/{id}', [DashboardStudiDampak::class, 'create'])->name('dashboard.studidampak.create');
 Route::get('/dashboard/studidampak/show/{id}', [DashboardStudiDampak::class, 'show'])->name('dashboard.studidampak.show');
+Route::post('/dashboard/studidampak/savereguler', [DashboardStudiDampak::class, 'storeReguler'])->name('dashboard.studidampak.storereguler');
+
+Route::view('/dashboard/studidampak/edit-permintaan/{id}', 'dashboard.studidampak.editpermintaan');
+Route::get('/dashboard/studidampak/editpermintaan/{id}', [DashboardStudiDampak::class, 'editPermintaan'])->name('dashboard.studidampak.editpermintaan'); 
+Route::post('/dashboard/studidampak/updatepermintaan/{id}', [DashboardStudiDampak::class, 'updatePermintaan'])->name('dashboard.studidampak.updatepermintaan');
+Route::get('/dashboard/studidampak/createpermintaan/{id}', [DashboardStudiDampak::class, 'createPermintaan'])->name('dashboard.studidampak.createpermintaan');
+Route::get('/dashboard/studidampak/showpermintaan/{id}', [DashboardStudiDampak::class, 'showPermintaan'])->name('dashboard.studidampak.showpermintaan');
+Route::post('/dashboard/studidampak/savepermintaan', [DashboardStudiDampak::class, 'savePermintaan'])->name('dashboard.studidampak.savepermintaan');
+
+Route::view('/dashboard/studidampak/edit-konsultasi/{id}', 'dashboard.studidampak.editkonsultasi');
+Route::get('/dashboard/studidampak/editkonsultasi/{id}', [DashboardStudiDampak::class, 'editKonsultasi'])->name('dashboard.studidampak.editkonsultasi'); 
+Route::post('/dashboard/studidampak/updatekonsultasi/{id}', [DashboardStudiDampak::class, 'updateKonsultasi'])->name('dashboard.studidampak.updatekonsultasi');
+Route::get('/dashboard/studidampak/createkonsultasi/{id}', [DashboardStudiDampak::class, 'createKonsultasi'])->name('dashboard.studidampak.createkonsultasi');
+Route::get('/dashboard/studidampak/showkonsultasi/{id}', [DashboardStudiDampak::class, 'showKonsultasi'])->name('dashboard.studidampak.showkonsultasi');
+Route::post('/dashboard/studidampak/savekonsultasi', [DashboardStudiDampak::class, 'saveKonsultasi'])->name('dashboard.studidampak.savekonsultasi');
 
 route::resource('/dashboard/daftarhadir', DashboardDaftarHadir::class);
 // routes/web.php
@@ -100,16 +161,24 @@ Route::get('/dashboard/daftarhadir/show/{id}', [DashboardDaftarHadir::class, 'sh
 
 route::resource('/dashboard/fasilitator', DashboardFasilitator::class);
 Route::get('/dashboard/fasilitator/show/{id_fasilitator}', [DashboardFasilitator::class, 'show'])->name('dashboard.fasilitator.show');
+Route::get('/dashboard/fasilitator/edit/{id_fasilitator}', [DashboardFasilitator::class, 'edit'])->name('dashboard.fasilitator.edit');
+Route::post('/dashboard/fasilitator/{id_fasilitator}', [DashboardFasilitator::class, 'update'])->name('dashboard.fasilitator.update');
 
 route::resource('/dashboard/postingan', PostinganController::class);
 
 route::resource('/dashboard/konsultasi', DashboardKonsultasi::class);
+Route::get('/dashboard/konsultasi/{id_konsultasi}/detail', [DashboardKonsultasi::class, 'detail'])->name('dashboard.konsultasi.detail');
+Route::delete('/dashboard/konsultasi/{id}', [DashboardKonsultasi::class, 'destroy'])->name('dashboard.konsultasi.destroy');
+route::get('/dashboard/konsultasi', [DashboardKonsultasi::class, 'index'])->name('dashboard.konsultasi.index');
 route::get('/dashboard/konsultasi/show/{id}', [DashboardKonsultasi::class, 'show'])->name('dashboard.konsultasi.show');
+route::get('/dashboard/konsultasi/{id}/create', [DashboardKonsultasi::class, 'create'])->name('dashboard.konsultasi.create');
+route::get('/dashboard/konsultasi/{id_konsultasi}/peserta', [DashboardKonsultasi::class, 'peserta'])->name('dashboard.konsultasi.peserta');
+route::post('/dashboard/konsultasi/simpan', [DashboardKonsultasi::class, 'simpan'])->name('dashboard.konsultasi.simpan');
 // });
 
 Route::resource('/peserta/beranda', BerandaController::class);
 // Route::resource('/dashboard/beranda', DashboardBeranda::class);
-Route::resource('/dashboard/beranda', AdminUsersController::class);
+// Route::resource('/dashboard/beranda', AdminUsersController::class);
 // Route::resource('/admin/login', LoginController::class);
 
 
@@ -162,6 +231,7 @@ Route::get('/get-provinsi/{negaraId}', [RegulerController::class, 'getProvinsi']
 Route::get('/get-kabupaten/{provinsiId}', [RegulerController::class, 'getKabupaten']);
 route::resource('/peserta/reguler', RegulerController::class); 
 route::post('/peserta/reguler', [RegulerController::class, 'store'])->name('peserta.reguler.store');
+route::get('/peserta/reguler/tanyapelatihan/{id}', [RegulerController::class, 'createEmail'])->name('peserta.reguler.email');
 // route::get('/peserta/reguler/create', RegulerController::class, 'create')->middleware('auth');
 // route::get('/peserta/daftarpelatihan/create/{pelatihan}', RegulerController::class);
 
@@ -223,7 +293,7 @@ Route::get('/peserta/pelatihan/peserta/sertifikat/{id}', [PesertaSertifikat::cla
 
 route::get('/login', [LoginController::class, 'index'])->name('login')->middleware('guest');
 route::post('/login', [LoginController::class, 'authenticate']);
-route::post('/logout', [LoginController::class, 'logout']);
+route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 route::get('/register', [RegisterController::class, 'create'])->name('register');
 route::post('/register', [RegisterController::class, 'store'])->name('register');
@@ -236,46 +306,3 @@ route::post('/register', [RegisterController::class, 'store'])->name('register')
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 
-/* Auto-generated admin routes */
-Route::middleware(['auth:' . config('admin-auth.defaults.guard'), 'admin'])->group(static function () {
-    Route::prefix('admin')->namespace('App\Http\Controllers\Admin')->name('admin/')->group(static function() {
-        Route::prefix('admin-users')->name('admin-users/')->group(static function() {
-            Route::get('/',                                             'AdminUsersController@index')->name('index');
-            Route::get('/create',                                       'AdminUsersController@create')->name('create');
-            Route::post('/',                                            'AdminUsersController@store')->name('store');
-            Route::get('/{adminUser}/impersonal-login',                 'AdminUsersController@impersonalLogin')->name('impersonal-login');
-            Route::get('/{adminUser}/edit',                             'AdminUsersController@edit')->name('edit');
-            Route::post('/{adminUser}',                                 'AdminUsersController@update')->name('update');
-            Route::delete('/{adminUser}',                               'AdminUsersController@destroy')->name('destroy');
-            Route::get('/{adminUser}/resend-activation',                'AdminUsersController@resendActivationEmail')->name('resendActivationEmail');
-        });
-    });
-});
-
-/* Auto-generated admin routes */
-Route::middleware(['auth:' . config('admin-auth.defaults.guard'), 'admin'])->group(static function () {
-    Route::prefix('admin')->namespace('App\Http\Controllers\Admin')->name('admin/')->group(static function() {
-        Route::get('/profile',                                      'ProfileController@editProfile')->name('edit-profile');
-        Route::post('/profile',                                     'ProfileController@updateProfile')->name('update-profile');
-        Route::get('/password',                                     'ProfileController@editPassword')->name('edit-password');
-        Route::post('/password',                                    'ProfileController@updatePassword')->name('update-password');
-    });
-});
-
- 
-
-
-/* Auto-generated admin routes */
-Route::middleware(['auth:' . config('admin-auth.defaults.guard'), 'admin'])->group(static function () {
-    Route::prefix('admin')->namespace('App\Http\Controllers\Admin')->name('admin/')->group(static function() {
-        Route::prefix('regulers')->name('regulers/')->group(static function() {
-            Route::get('/',                                             'RegulerController@index')->name('index');
-            Route::get('/create',                                       'RegulerController@create')->name('create');
-            Route::post('/',                                            'RegulerController@store')->name('store');
-            Route::get('/{reguler}/edit',                               'RegulerController@edit')->name('edit');
-            Route::post('/bulk-destroy',                                'RegulerController@bulkDestroy')->name('bulk-destroy');
-            Route::post('/{reguler}',                                   'RegulerController@update')->name('update');
-            Route::delete('/{reguler}',                                 'RegulerController@destroy')->name('destroy');
-        });
-    });
-});

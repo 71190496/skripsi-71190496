@@ -97,8 +97,19 @@
 
                     <div class="col-lg-9 entries">
                         <article class="entry entry-single">
+                            @if (Session::has('success'))
+                                <div class="pt-3">
+                                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                        {{ Session::get('success') }}
+                                        {{-- <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button> --}}
+                                    </div>
+                                </div>
+                            @endif
 
-                            <form method="post" action="{{ route('peserta.daftarhadir.store') }}" role="form" class="form-studi">
+                            <form method="post" action="{{ route('peserta.daftarhadir.store') }}" role="form"
+                                class="form-studi">
                                 @csrf
                                 <h2 class="entry-title">
                                     Presensi
@@ -106,16 +117,10 @@
                                 <table class="table">
                                     <tbody>
                                         <tr>
-                                            <td width="5%">No.</td>
-                                            <td width="15%">Tanggal</td>
-                                            <td width="5%">Pertemuanke</td>
-                                            <td width="50%">Keterangan</td>
+                                            <td width="50%">Tanggal Presensi</td>
                                             <td width="25%">Presensi</td>
                                         </tr>
                                         <tr>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
                                             <td></td>
                                             <td>
                                                 <!-- Hidden input to store the date and time -->

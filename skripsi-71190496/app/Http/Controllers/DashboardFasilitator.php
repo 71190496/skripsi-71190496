@@ -6,7 +6,6 @@ use App\Models\fasilitator_pelatihan_test;
 use App\Models\internal_eksternal;
 use App\Models\gender;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class DashboardFasilitator extends Controller
 {
@@ -36,30 +35,44 @@ class DashboardFasilitator extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request->all());
         $request->validate([
             'nama_fasilitator' => 'required',
-            'tempat_tgl_lahir' => 'required',
-            'email_fasilitator' => 'required',
-            'nomor_telepon' => 'required',
-            'alamat' => 'required'
+            'nik' => 'required|numeric|digits:16',
+            'email_fasilitator' => 'required|email:dns',
+            'nomor_telepon' => 'required|numeric|digits:12',
+            'alamat' => 'required',
+            'gender' => 'required',
+            'asal_lembaga' => 'required',
+            'id_internal_eksternal' => 'required',
+            'body' => 'required',
         ], [
-            'nama_fasilitator.required' => 'Field nama wajib diisi',
-            'tempat_tgl_lahir.required' => 'Field email wajib diisi',
-            'email_fasilitator.required' => 'Field nomor hp wajib diisi',
-            'nomor_telepon.required' => 'Field nama organisasi wajib diisi',
-            'alamat.required' => 'Field jabatan wajib diisi'
+            'nama_fasilitator.required' => 'Field nama fasilitator wajib diisi',
+            'nik.required' => 'Field nik wajib diisi',
+            'nik.numeric' => 'Field nik harus berupa angka',
+            'nik.digits' => 'Field nik harus 16 angka',
+            'email_fasilitator.required' => 'Field email wajib diisi',
+            'email_fasilitator.email' => 'Field email harus email yang valid',
+            'nomor_telepon.required' => 'Field nomor telepon wajib diisi',
+            'nomor_telepon.digits' => 'Field nomor telepon harus 12 angka',
+            'id_internal_eksternal.required' => 'Field fasilitator internal atau eksternal wajib diisi',
+            'alamat.required' => 'Field alamat wajib diisi',
+            'gender.required' => 'Field jenis kelamin wajib diisi',
+            'body.required' => 'Field tambahkan keahlian wajib diisi',
+            'asal_lembaga.required' => 'Field asal lembaga wajib diisi',
         ]);
         $data = [
             'nama_fasilitator' => $request->nama_fasilitator,
-            'tempat_tgl_lahir' => $request->tempat_tgl_lahir,
+            'nik' => $request->nik,
             'email_fasilitator' => $request->email_fasilitator,
             'nomor_telepon' => $request->nomor_telepon,
             'alamat' => $request->alamat,
-            'id_gender' => $request->id_gender,
+            'jenis_kelamin' => $request->gender,
             'id_internal_eksternal' => $request->id_internal_eksternal,
             'asal_lembaga' => $request->asal_lembaga,
             'body' => $request->body,
         ];
+        
         // $trix = new fasilitator_pelatihan_test();
         // $trix->body = $request->input('body');
 
@@ -97,24 +110,28 @@ class DashboardFasilitator extends Controller
      */
     public function edit($id)
     {
-        $data = fasilitator_pelatihan_test::find($id);
-        return view('dashboard.fasilitator.edit', compact('data'));
+        $data = fasilitator_pelatihan_test::with('internal_eksternal')->find($id);
+        // dd($data);
+        return view('dashboard.fasilitator.edit', compact('data'),[
+            'internal_eksternal' => internal_eksternal::all()
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $id_fasilitator)
     {
-        $data = fasilitator_pelatihan_test::find($id);
+        // dd($request->all());
+        $data = fasilitator_pelatihan_test::findOrFail($id_fasilitator);
         $data->nama_fasilitator = $request->nama_fasilitator;
-        $data->tempat_tgl_lahir = $request->tempat_tgl_lahir;
+        // $data->tempat_tgl_lahir = $request->tempat_tgl_lahir;
         $data->email_fasilitator = $request->email_fasilitator;
         $data->nomor_telepon = $request->nomor_telepon;
-        $data->id_gender = $request->input('id_gender');
+        $data->jenis_kelamin = $request->gender;
         // $data->id_internal_eksternal = $request->id_internal_eksternal;
         $data->asal_lembaga = $request->asal_lembaga;
-        $data->body = $request->alamat;
+        $data->body = $request->body;
         $data->save();
 
         return redirect('/dashboard/fasilitator')->with('success', 'Berhasil mengupdate data');

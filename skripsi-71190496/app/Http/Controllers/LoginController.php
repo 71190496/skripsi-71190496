@@ -25,10 +25,13 @@ class LoginController extends Controller
         ]);
 
         // dd('masuk');
+        // $lolo = (Auth::attempt($credentials));
+        // dd($lolo);
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
+            // dd(Auth::user());
             if (Auth::user()->role == 'admin') {
                 return redirect()->intended('/dashboard/reguler'); // Ganti dengan rute admin yang sesuai
             }
@@ -37,7 +40,7 @@ class LoginController extends Controller
         }
 
         return back()->withErrors([
-            'email' => 'Email yang anda masukan tidak terdaftar!',
+            'email' => 'Email atau Password yang anda masukan salah',
         ])->onlyInput('email');
     }
 

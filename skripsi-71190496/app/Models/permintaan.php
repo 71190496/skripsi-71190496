@@ -16,7 +16,7 @@ class permintaan extends Model
         'id_tema', 
         'nama_pelatihan', 
         'metode_pelatihan',
-        'jenis_pelatihan',
+        // 'jenis_pelatihan',
         'lokasi_pelatihan',  
         'tanggal_mulai',
         'tanggal_selesai',

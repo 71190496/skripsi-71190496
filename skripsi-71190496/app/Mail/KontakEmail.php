@@ -26,7 +26,7 @@ class KontakEmail extends Mailable
     {
         return $this->from($this->data['email'], $this->data['name'])
                     ->subject($this->data['subject'])
-                    ->view('emails.contact-form')
+                    ->view('email')
                     ->with(['data' => $this->data]);
     }
 
@@ -37,7 +37,7 @@ class KontakEmail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Kontak',
+            subject: $this->data['subject'],
         );
     }
 
@@ -47,7 +47,7 @@ class KontakEmail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'view.name',
+            view: 'email.email-kontak',
         );
     }
 

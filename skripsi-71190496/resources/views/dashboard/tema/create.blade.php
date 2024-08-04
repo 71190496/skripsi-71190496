@@ -2,13 +2,18 @@
 
 @section('container')
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Form Tambah Postingan</h1>
+        <h1 class="h2">Form Tambah Tema Pelatihan</h1>
     </div>
-    <div class="col-lg-8 mb-4 ">
+    <div class="col-lg-12 mb-4 ">
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                <form method="post" action="/dashboard/tema">
-                    @csrf
+                <div class="d-flex justify-content-start">
+                    <h6 class="m-0 font-weight-bold text-success">Tema</h6>
+                </div>
+            </div>
+            <form method="post" action="/dashboard/tema">
+                @csrf
+                <div class="card-body">
                     <div class="form-group mb-2">
                         <label for="judul_tema">Judul Tema</label>
                         <input type="text" class="form-control @error('judul_tema') is-invalid @enderror"
@@ -28,10 +33,10 @@
                                 {{ $message }}
                             </div>
                         @enderror
-                    </div> 
-                    <button type="submit" class="btn btn-success">Simpan</button>
-                </form>
-            </div>
+                    </div>
+                </div>
         </div>
+        <button type="submit" class="btn btn-success">Simpan</button>
+        </form>
     </div>
 @endsection

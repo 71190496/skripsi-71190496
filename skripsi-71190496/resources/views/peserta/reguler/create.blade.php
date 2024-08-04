@@ -6,7 +6,7 @@
         <div class="container">
 
             <div class="d-flex justify-content-between align-items-center">
-                <h2>Detail Pelatihan</h2>
+                <h2>Form Reguler</h2>
                 <ol>
                     <li><a href="/peserta/beranda">Beranda</a></li>
                     <li><a href="/peserta/reguler">Reguler</a></li>
@@ -52,23 +52,24 @@
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
+                            
                             <div class="col-md-6 form-group mt-3 mt-md-0">
                                 <h6>Kontak Personal / Whatsapp</h6>
-                                <input id="no_hp" type="numeric"
+                                <input id="no_hp" type="tel" maxlength="12"
                                     class="form-control @error('no_hp') is-invalid @enderror"
-                                    placeholder="Masukkan Nomor Telepon Anda" name="no_hp" value="{{ old('no_hp') }}"
-                                    required autofocus>
+                                    placeholder="Masukkan Nomor Telepon Anda" name="no_hp" value="{{ old('no_hp') }}" autofocus>
                                 @error('no_hp')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
+                            
                         </div>
 
                         <div class="row mt-3">
                             <div class="col-md-6 form-group">
-                                <h6>Gender</h6>
+                                <h6>Jenis Kelamin</h6>
                                 <select class="form-select @error('gender') is-invalid @enderror" name="gender"
-                                    required>
+                                    >
                                     <option value="">Pilih Jenis Kelamin</option>
                                     <option value="Laki-Laki" {{ old('gender') == 'Laki-Laki' ? 'selected' : '' }}>
                                         Laki-Laki</option>
@@ -87,7 +88,7 @@
                             <div class="col-md-6 form-group mt-3 mt-md-0">
                                 <h6>Rentang Usia</h6>
                                 <select class="form-select @error('id_rentang_usia') is-invalid @enderror"
-                                    name="id_rentang_usia" required>
+                                    name="id_rentang_usia" >
                                     <option value="">Pilih Rentang Usia</option>
                                     @foreach ($rentang_usia as $item)
                                         <option value="{{ $item['id'] }}"
@@ -104,7 +105,7 @@
                         <div class="row mt-2">
                             <h6 class="mt-2">Negara, Provinsi & Kabupaten/Kota</h6>
                             <div class="col-md-4">
-                                <select class="form-select" name="id_negara" id="id_negara" required>
+                                <select class="form-select" name="id_negara" id="id_negara" >
                                     <option value="">Pilih Negara</option>
                                     @foreach ($negara as $item)
                                         <option value="{{ $item['id'] }}">{{ $item['nama_negara'] }}
@@ -113,12 +114,12 @@
                                 </select>
                             </div>
                             <div class="col-md-4">
-                                <select class="form-select" name="id_provinsi" id="id_provinsi" required>
+                                <select class="form-select" name="id_provinsi" id="id_provinsi" >
                                     <option value="">Pilih Provinsi</option>
                                 </select>
                             </div>
                             <div class="col-md-4">
-                                <select class="form-select" name="id_kabupaten" id="id_kabupaten" required>
+                                <select class="form-select" name="id_kabupaten" id="id_kabupaten" >
                                     <option value="">Pilih Kota</option>
                                 </select>
                             </div>
@@ -128,7 +129,7 @@
                             <h6>Nama Organisasi</h6>
                             <input type="text" class="form-control @error('nama_organisasi') is-invalid @enderror"
                                 placeholder="Masukkan Nama Organisasi Anda" name="nama_organisasi" id="nama_organisasi"
-                                value="{{ old('nama_organisasi') }}" required>
+                                value="{{ old('nama_organisasi') }}" >
                             @error('nama_organisasi')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -138,7 +139,7 @@
                             <div class="col-md-6 form-group">
                                 <h6>Jenis Organisasi</h6>
                                 <select name="id_organisasi" id="id_organisasi"
-                                    class="form-select @error('id_organisasi') is-invalid @enderror" required>
+                                    class="form-select @error('id_organisasi') is-invalid @enderror" >
                                     <option value="">Pilih Jenis Organisasi</option>
                                     @foreach ($jenis_organisasi as $item)
                                         <option value="{{ $item['id'] }}"
@@ -155,7 +156,7 @@
                                 <input id="jabatan_peserta" type="text"
                                     class="form-control @error('jabatan_peserta') is-invalid @enderror"
                                     placeholder="Masukkan Jabatan Anda" name="jabatan_peserta"
-                                    value="{{ old('jabatan_peserta') }}" required>
+                                    value="{{ old('jabatan_peserta') }}" >
                                 @error('jabatan_peserta')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -165,7 +166,7 @@
                         <div class="form-group mt-3 mb-3">
                             <h6>Dimana Anda Mendapat Info Tentang Pelatihan Ini?</h6>
                             <select name="id_informasi" id="id_informasi"
-                                class="form-select @error('id_informasi') is-invalid @enderror" required>
+                                class="form-select @error('id_informasi') is-invalid @enderror" >
                                 <option value="">Pilih Info Pelatihan</option>
                                 @foreach ($informasi_pelatihan as $item)
                                     <option value="{{ $item['id'] }}"
@@ -183,18 +184,18 @@
                             <input id="pelatihan_relevan" type="text"
                                 class="form-control @error('pelatihan_relevan') is-invalid @enderror"
                                 placeholder="Pelatihan Relevan Yang Pernah Anda Ikuti" name="pelatihan_relevan"
-                                value="{{ old('pelatihan_relevan') }}" required>
+                                value="{{ old('pelatihan_relevan') }}" >
                             @error('pelatihan_relevan')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
 
-                        <div class="form-group mt-3 mb-3">
+                        {{-- <div class="form-group mt-3 mb-3">
                             <h6>Upload Bukti Bayar</h6>
                             <p>Silahkan lakukan pembayaran melalui transfer ke Bank BNI 555 777 8967 a.n. Yayasan
                                 SATUNAMA Yogyakarta.</p>
                             <input class="form-control @error('bukti_bayar') is-invalid @enderror" type="file"
-                                id="bukti_bayar" name="bukti_bayar" required>
+                                id="bukti_bayar" name="bukti_bayar" >
                             @error('bukti_bayar')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -202,7 +203,7 @@
                             @if (old('bukti_bayar'))
                                 <p>File yang diunggah sebelumnya: {{ old('bukti_bayar') }}</p>
                             @endif
-                        </div>
+                        </div> --}}
 
 
                         <h6>Harapan Dari Pelatihan Ini</h6>

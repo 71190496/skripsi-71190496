@@ -21,7 +21,7 @@
                             <label for="nama_pelatihan" class="form-label">Nama Pelatihan</label>
                             <input type="text" class="form-control @error('nama_pelatihan') is-invalid @enderror"
                                 placeholder="Masukkan Nama Pelatihan" name="nama_pelatihan" id="nama_pelatihan"
-                                value="{{ old('nama_pelatihan') }}" required autofocus>
+                                value="{{ old('nama_pelatihan') }}" autofocus>
                             @error('nama_pelatihan')
                                 <div class="invalid-feedback">
                                     {{ $message }}
@@ -31,13 +31,16 @@
 
                         <div class="mb-3">
                             <label for="tema" class="form-label">Tema Pelatihan</label>
-                            <select class="form-control" name="id_tema" value="{{ old('id_tema') }}" required>
+                            <select class="form-control" name="id_tema" required>
                                 <option value="">Pilih Tema Pelatihan</option>
                                 @foreach ($tema as $item)
-                                    <option value="{{ $item->id }}">{{ $item->judul_tema }}</option>
+                                    <option value="{{ $item->id }}" {{ old('id_tema') == $item->id ? 'selected' : '' }}>
+                                        {{ $item->judul_tema }}
+                                    </option>
                                 @endforeach
                             </select>
                         </div>
+
 
                         <div class="mb-3">
                             <label for="fee_pelatihan" class="form-label">Fee Pelatihan</label>
@@ -53,20 +56,22 @@
 
                         <div class="mb-3">
                             <label for="metode_pelatihan" class="form-label">Metode Pelatihan</label>
-                            <select class="form-control" name="metode_pelatihan" value="{{ old('metode_pelatihan') }}"
-                                required>
+                            <select class="form-control" name="metode_pelatihan" required>
                                 <option value="">Pilih Metode Pelatihan</option>
-                                <option value="Online">Online</option>
-                                <option value="Offline">Offline</option>
+                                <option value="Online" {{ old('metode_pelatihan') == 'Online' ? 'selected' : '' }}>Online
+                                </option>
+                                <option value="Offline" {{ old('metode_pelatihan') == 'Offline' ? 'selected' : '' }}>Offline
+                                </option>
                             </select>
                         </div>
+
 
                         <div class="mb-3">
                             <label for="lokasi_pelatihan" class="form-label">Lokasi Pelatihan</label>
                             <input type="text" class="form-control @error('lokasi_pelatihan') is-invalid @enderror"
                                 placeholder="Masukkan Lokasi Pelatihan" name="lokasi_pelatihan" id="lokasi_pelatihan"
-                                value="{{ old('lokasi_pelatihan') }}" required>
-                            @error('fee_pelatihan')
+                                value="{{ old('lokasi_pelatihan') }}">
+                            @error('lokasi_pelatihan')
                                 <div class="invalid-feedback">
                                     {{ $message }}
                                 </div>
@@ -79,7 +84,7 @@
                                 class="form-control @error('kuota_peserta') is-invalid @enderror"
                                 placeholder="Masukkan Kuota Peserta" name="kuota_peserta" id="kuota_peserta"
                                 value="{{ old('kuota_peserta') }}" required>
-                            @error('fee_pelatihan')
+                            @error('kuota_peserta')
                                 <div class="invalid-feedback">
                                     {{ $message }}
                                 </div>
@@ -101,7 +106,7 @@
                         <div class="mb-3">
                             <label for="file" class="form-label">Upload Materi</label>
                             <input value="{{ old('file') }}" class="form-control @error('file.*') is-invalid @enderror"
-                                type="file" id="file" name="file[]" multiple required>
+                                type="file" id="file" name="file[]" multiple>
                             @error('file.*')
                                 <div class="invalid-feedback">
                                     {{ $message }}
@@ -111,13 +116,10 @@
 
                         <div class="trix-content mb-3">
                             <label for="deskripsi_pelatihan" class="form-label">Deskripsi Pelatihan</label>
-                            {{-- <textarea class="form-control" name="deskripsi_pelatihan" id="deskripsi_pelatihan" cols="70" rows="10"></textarea> --}}
                             <input id="deskripsi_pelatihan" type="hidden" name="deskripsi_pelatihan"
                                 value="{{ old('deskripsi_pelatihan') }}">
-                            <trix-editor input="deskripsi_pelatihan"
-                                upload-url="/dashboard/reguler/upload/image"></trix-editor>
-                            {{-- <trix-editor input="deskripsi_pelatihan"
-                                upload-url="/dashboard/reguler/upload/file"></trix-editor> --}}
+                            <trix-editor class="{{ $errors->has('deskripsi_pelatihan') ? 'is-invalid' : '' }}"
+                                input="deskripsi_pelatihan" upload-url="/dashboard/reguler/upload/image"></trix-editor>
                             @error('deskripsi_pelatihan')
                                 <div class="invalid-feedback">
                                     <p class="text-danger">{{ $message }}</p>
@@ -139,26 +141,50 @@
                     <div class="card-body">
                         <div class="mb-3">
                             <label for="tanggal_pendaftaran" class="form-label">Tanggal Pendaftaran Pelatihan</label>
-                            <input type="date" id="tanggal_pendaftaran" class="form-control"
-                                name="tanggal_pendaftaran" value="{{ old('tanggal_pendaftaran') }}" required>
+                            <input type="date" id="tanggal_pendaftaran"
+                                class="form-control @error('tanggal_pendaftaran') is-invalid @enderror"
+                                name="tanggal_pendaftaran" value="{{ old('tanggal_pendaftaran') }}">
+                            @error('tanggal_pendaftaran')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
                         </div>
 
                         <div class="mb-3">
                             <label for="tanggal_batas_pendaftaran" class="form-label">Tanggal Batas Pendaftaran
                                 Pelatihan</label>
-                            <input type="date" id="tanggal_batas_pendaftaran" class="form-control"
-                                name="tanggal_batas_pendaftaran" value="{{ old('tanggal_batas_pendaftaran') }}" required>
+                            <input type="date" id="tanggal_batas_pendaftaran"
+                                class="form-control @error('tanggal_batas_pendaftaran') is-invalid @enderror"
+                                name="tanggal_batas_pendaftaran" value="{{ old('tanggal_batas_pendaftaran') }}">
+                            @error('tanggal_batas_pendaftaran')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
                         </div>
                         <div class="mb-3">
                             <label for="tanggal_mulai" class="form-label">Tanggal Mulai Pelatihan</label>
-                            <input type="date" id="tanggal_mulai" class="form-control" name="tanggal_mulai"
-                                value="{{ old('tanggal_mulai') }}" required>
+                            <input type="date" id="tanggal_mulai"
+                                class="form-control @error('tanggal_mulai') is-invalid @enderror" name="tanggal_mulai"
+                                value="{{ old('tanggal_mulai') }}">
+                            @error('tanggal_mulai')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
                         </div>
 
                         <div class="mb-3">
                             <label for="tanggal_selesai" class="form-label">Tanggal Selesai Pelatihan</label>
-                            <input type="date" id="tanggal_selesai" class="form-control" name="tanggal_selesai"
-                                value="{{ old('tanggal_selesai') }}" required>
+                            <input type="date" id="tanggal_selesai"
+                                class="form-control @error('tanggal_selesai') is-invalid @enderror" name="tanggal_selesai"
+                                value="{{ old('tanggal_selesai') }}">
+                            @error('tanggal_selesai')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
                         </div>
                     </div>
                 </div>

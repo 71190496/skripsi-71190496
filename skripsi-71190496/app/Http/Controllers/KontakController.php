@@ -30,6 +30,11 @@ class KontakController extends Controller
             'email' => 'required|email',
             'subject' => 'required',
             'message' => 'required',
+        ], [
+            'name.required' => 'Field nama wajib diisi',
+            'email.required' => 'Field email wajib diisi',
+            'subject.required' => 'Field subjek wajib diisi',
+            'message.required' => 'Field pesan wajib diisi'
         ]);
 
         $data = [
@@ -39,9 +44,9 @@ class KontakController extends Controller
             'message' => $request->message,
         ];
 
-        Mail::to('your@email.com')->send(new KontakEmail($data));
+        Mail::to('john.julius@ti.ukdw.ac.id')->send(new KontakEmail($data));
 
-        return back()->with('success', 'Your message has been sent. Thank you!');
+        return back()->with('success', 'Pesan anda telah terkirim. Terima Kasih!');
     }
 
     /**

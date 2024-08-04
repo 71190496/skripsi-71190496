@@ -94,18 +94,23 @@
                                                  placeholder="Masukan Email" autofocus
                                                  @error('email') is-invalid  @enderror>
                                          </div>
+
+
+                                         <div class="form-group">
+                                             <div class="password-container">
+                                                 <input type="password" class="form-control form-control-user"
+                                                     id="password" name="password" placeholder="Masukan Password"
+                                                     @error('email') is-invalid @enderror>
+                                                 <span toggle="#password"
+                                                     class="fa fa-fw fa-eye field-icon toggle-password-login"
+                                                     onclick="togglePassword()"></span>
+                                             </div>
+                                         </div>
                                          @error('email')
                                              <div class="text-danger" style="text-align: left">
                                                  {{ $message }}
                                              </div>
                                          @enderror
-
-                                         <div class="form-group">
-                                            <div class="password-container">
-                                                <input type="password" class="form-control form-control-user" id="password" name="password" placeholder="Masukan Password" @error('email') is-invalid @enderror>
-                                                <span toggle="#password" class="fa fa-fw fa-eye field-icon toggle-password-login" onclick="togglePassword()"></span>
-                                            </div>
-                                        </div>
                                          @error('password')
                                              <div class="text-danger" style="text-align: left">
                                                  {{ $message }}
@@ -142,21 +147,21 @@
      <script src="{{ asset('style/js/sb-admin-2.min.js') }}"></script>
 
      <script>
-        function togglePassword() {
-            var passwordInput = document.getElementById("password");
-            var toggleIcon = document.querySelector(".toggle-password-login");
-    
-            if (passwordInput.type === "password") {
-                passwordInput.type = "text";
-                toggleIcon.classList.remove("fa-eye");
-                toggleIcon.classList.add("fa-eye-slash");
-            } else {
-                passwordInput.type = "password";
-                toggleIcon.classList.remove("fa-eye-slash");
-                toggleIcon.classList.add("fa-eye");
-            }
-        }
-    </script>
+         function togglePassword() {
+             var passwordInput = document.getElementById("password");
+             var toggleIcon = document.querySelector(".toggle-password-login");
+
+             if (passwordInput.type === "password") {
+                 passwordInput.type = "text";
+                 toggleIcon.classList.remove("fa-eye");
+                 toggleIcon.classList.add("fa-eye-slash");
+             } else {
+                 passwordInput.type = "password";
+                 toggleIcon.classList.remove("fa-eye-slash");
+                 toggleIcon.classList.add("fa-eye");
+             }
+         }
+     </script>
 
  </body>
 

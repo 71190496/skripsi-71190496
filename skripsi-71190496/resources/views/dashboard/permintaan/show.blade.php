@@ -4,15 +4,13 @@
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
         <h1 class="h2">Detail Permintaan</h1>
         <div class="d-flex justify-content-end">
-            @foreach ($data as $item)
-                <a href="{{ route('dashboard.permintaan.peserta', ['id' => $item]) }}" class="btn btn-success mx-1"><i style="width:17px" data-feather="plus"></i>
-                    Buatkan Akun Peserta</a>
-                <a href="{{ route('dashboard.permintaan.create', ['id' => $item]) }}" class="btn btn-success mx-1"><i
-                        style="width:17px" data-feather="plus"></i>
-                    Buatkan Pelatihan</a>
-            @endforeach
-
-
+            @if ($showButtons)
+                @foreach ($data as $item)
+                    <a href="{{ route('dashboard.permintaan.create', ['id' => $item]) }}" class="btn btn-success mx-1"><i
+                            style="width:17px" data-feather="plus"></i>
+                        Buatkan Pelatihan</a>
+                @endforeach
+            @endif
         </div>
     </div>
 
@@ -31,8 +29,9 @@
                             <tr>
                                 <th scope="col">Nama Mitra</th>
                                 <th scope="col">Judul Pelatihan</th>
-                                <th scope="col">Jenis Pelatihan</th>
+                                {{-- <th scope="col">Jenis Pelatihan</th> --}}
                                 <th scope="col">Tema Pelatihan</th>
+                                <th scope="col">Nomor Hp PIC</th>
                                 <th scope="col">Tanggal Mulai Pelatihan</th>
                                 <th scope="col">Tanggal Selesai Pelatihan</th>
                                 <th scope="col">Masalah Lembaga</th>
@@ -46,8 +45,9 @@
                             <tr>
                                 <td>{{ $item->mitra->nama_mitra }}</td>
                                 <td>{{ $item->judul_pelatihan }}</td>
-                                <td>{{ $item->jenis_pelatihan }}</td>
+                                {{-- <td>{{ $item->jenis_pelatihan }}</td> --}}
                                 <td>{{ $item->tema->judul_tema }}</td>
+                                <td>{{ $item->no_pic }}</td>
                                 <td>{{ \Carbon\Carbon::parse($item->tanggal_waktu_mulai)->locale('id')->isoFormat('D MMMM Y') }}
                                 </td>
                                 <td>{{ \Carbon\Carbon::parse($item->tanggal_waktu_selesai)->locale('id')->isoFormat('D MMMM Y') }}

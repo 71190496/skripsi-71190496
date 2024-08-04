@@ -28,7 +28,6 @@
                             <th>Informasi Pelatihan</th>
                             <th>Pelatihan Relevan</th>
                             <th>Harapan Pelatihan</th>
-                            <th>Bukti Bayar</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -49,13 +48,13 @@
                                 <td class="editable">{{ $item->informasi_pelatihan->keterangan }}</td>
                                 <td class="editable">{{ $item['pelatihan_relevan'] }}</td>
                                 <td class="editable">{{ $item['harapan_pelatihan'] }}</td>
-                                <td class="editable">
+                                {{-- <td class="editable">
                                     <a href="{{ asset('storage/' . $item->bukti_bayar) }}" download>
                                         <img src="{{ asset('storage/' . $item->bukti_bayar) }}" alt="Bukti Bayar"
                                             style="max-width: 100px; max-height: 100px;">
                                         {{ basename($item['bukti_bayar']) }}
                                     </a> 
-                                </td>
+                                </td> --}}
                             </tr>
                         @endforeach
                     </tbody>
@@ -65,27 +64,30 @@
         </div>
     </div>
 
+
+   
+
     {{-- @php
         $data2 = app('App\Http\Controllers\DashboardDaftarHadir')->show();
     @endphp --}}
-    <div class="card shadow mb-4">
+    {{-- <div class="card shadow mb-4">
         <div class="card-header py-3">
             <h6 class="m-0 font-weight-bold text-success">Tabel Daftar Hadir</h6>
-        </div>
-        <div class="card-body">
-            {{-- <div class="col-sm-12 ">
+        </div> --}}
+    {{-- <div class="card-body"> --}}
+    {{-- <div class="col-sm-12 ">
                 <div id="dataTable_filter" class="dataTables_filter">
                     <label>Search:<input type="search" class="form-control form-control-sm" placeholder=""
                             aria-controls="dataTable" name="search"></label>
                 </div>
             </div> --}}
-            <div class="col-sm-12 col-md-6 mb-2">
-                {{-- @if ($data->isNotEmpty())
+    {{-- <div class="col-sm-12 col-md-6 mb-2"> --}}
+    {{-- @if ($data->isNotEmpty())
                     <a href="{{ route('export.daftarhadir', ['id_pelatihan' => $data->first()->pelatihan->id_pelatihan]) }}"
                         class="btn btn-success"><i style="width:17px" data-feather="file-text"></i></a>
                 @endif --}}
-                {{-- {{ dd($presensiStatus) }} --}}
-                @if ($data->isEmpty())
+    {{-- {{ dd($presensiStatus) }} --}}
+    {{-- @if ($data->isEmpty())
                     <p>No item available</p>
                 @else
                     @if ($presensiStatus == 'buka')
@@ -97,9 +99,9 @@
                         <a href="{{ route('dashboard.reguler.presensi', ['id_pelatihan' => $item->id_pelatihan, 'aksi' => 'buka']) }}"
                             class="btn btn-success">Buka Presensi</a>
                     @endif
-                @endif
-            </div>
-            <div class="table-responsive">
+                @endif --}}
+    {{-- </div> --}}
+    {{-- <div class="table-responsive">
                 <table id="daftar_hadir" class="display responsive nowrap" width="100%">
                     <thead>
                         <tr>
@@ -118,9 +120,9 @@
                         @endforeach
                     </tbody>
                 </table>
-            </div>
-        </div>
-    </div>
+            </div> --}}
+    {{-- </div> --}}
+    {{-- </div> --}}
 @endsection
 
 
@@ -136,6 +138,8 @@
     <script
         src="https://cdn.datatables.net/v/bs5/jszip-3.10.1/dt-2.0.0/b-3.0.0/b-html5-3.0.0/fc-5.0.0/fh-4.0.0/r-3.0.0/sc-2.4.0/sp-2.3.0/datatables.min.js">
     </script>
+
+    
 
     <script>
         $(document).ready(function() {
@@ -213,7 +217,7 @@
                     [10, 25, 50, -1],
                     [10, 25, 50, 'All']
                 ]
-            });
+            }); 
         });
     </script>
 @endsection

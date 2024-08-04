@@ -27,4 +27,40 @@ class peserta_permintaan extends Model
     public function user(){
         return $this->belongsTo(User::class, 'id_user');
     }
+
+    public function getIsFilledAttribute()
+    {
+        return evaluasi_pelatihan_permintaan::where('id_permintaan', $this->id_permintaan)
+            ->where('id_user', $this->id_user)
+            ->exists();
+    }
+
+    public function evaluasiPelatihan()
+    {
+        return $this->hasMany(evaluasi_pelatihan_permintaan::class, 'id_user', 'id_user');
+    }
+
+    public function getIsFilledAttributes()
+    {
+        return survey_pelatihan_permintaan::where('id_permintaan', $this->id_permintaan)
+            ->where('id_user', $this->id_user)
+            ->exists();
+    }
+
+    public function surveyPelatihan()
+    {
+        return $this->hasMany(survey_pelatihan_permintaan::class, 'id_user', 'id_user');
+    }
+    
+    public function getIsFilledAttributess()
+    {
+        return studidampak_pelatihan_permintaan::where('id_permintaan', $this->id_permintaan)
+            ->where('id_user', $this->id_user)
+            ->exists();
+    }
+
+    public function studiPelatihan()
+    {
+        return $this->hasMany(studidampak_pelatihan_permintaan::class, 'id_user', 'id_user');
+    }
 }

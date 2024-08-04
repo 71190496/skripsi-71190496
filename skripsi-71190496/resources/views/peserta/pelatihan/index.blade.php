@@ -7,8 +7,18 @@
             <h2>Pelatihan Saya</h2>
         </div>
     </div><!-- End Breadcrumbs -->
-    {{-- <div class="container">
-        <div class="row gx"> --}}
+
+    <section id="team" class="team section-bg">
+        <div class="container">
+
+            <div class="section-title aos-init aos-animate" data-aos="fade-up">
+                @auth
+                    <h2>Selamat
+                        Datang, {{ auth()->user()->name }}</h2>
+                    <p>Semoga aktivitas pelatihanmu menyenangkan bersama SATUNAMA.</p>
+                @endauth
+            </div> 
+    </section>
 
     {{-- <div class="col"> --}}
     <section id="contact" class="contact">
@@ -18,7 +28,7 @@
                     @include('peserta.layouts.sidebar')
                 </div> --}}
                 {{-- <div class="col-md-9"> --}}
-                <div class="card rounded-2 border p-3 lift mb-3 shadow" data-aos="fade-up">
+                {{-- <div class="card rounded-2 border p-3 lift mb-3 shadow" data-aos="fade-up">
                     <div class="d-flex py-4">
                         @auth
                             <div class="w-80p h-80p rounded-circle overflow-hidden">
@@ -39,7 +49,7 @@
                             </div>
                         @endauth
                     </div>
-                </div>
+                </div> --}}
 
 
                 <div class="card rounded-2 border p-3 lift mb-3 shadow" data-aos="fade-up">
@@ -55,8 +65,7 @@
                                                 href="{{ route('peserta.pelatihan.show', ['id' => $item->pelatihan->id_pelatihan]) }}"
                                                 style="max-width: 100px;">
                                                 <div class="d-flex justify-content-center align-items-center h-100">
-                                                    <img src="http://127.0.0.1:8000/storage/image/2pbpiSF5iN8AzD4obXpDbhlIY6btFvrN00XADIeL.jpg"
-                                                        alt="" width="100px" height="80">
+                                                    <img src="/img/stc1.png" class="img-fluid" width="100px" height="80">
                                                 </div>
                                             </a>
                                             <div class="col-12 col-md-9 col-lg-9 col-xl-9 d-md-block">
@@ -109,7 +118,7 @@
                         </div>
                     @endforeach
                 </div>
-                
+
                 <div class="card rounded-2 border p-3 lift mb-3 shadow" data-aos="fade-up">
                     <h5>Pelatihan Permintaan</h5>
                     <hr>
@@ -126,8 +135,7 @@
                                                 href="{{ route('peserta.pelatihan.show', ['id' => $item->id]) }}"
                                                 style="max-width: 100px;">
                                                 <div class="d-flex justify-content-center align-items-center h-100">
-                                                    <img src="http://127.0.0.1:8000/storage/image/2pbpiSF5iN8AzD4obXpDbhlIY6btFvrN00XADIeL.jpg"
-                                                        alt="" width="100px" height="80">
+                                                    <img src="/img/stc1.png" class="img-fluid" width="100px" height="80">
                                                 </div>
                                             </a>
                                             <div class="col-12 col-md-9 col-lg-9 col-xl-9 d-md-block">
@@ -158,6 +166,66 @@
                                                 <div class="col-auto mt-5 px-auto">
                                                     <a class="btn btn-outline-success btn-xs btn-pill mb-1"
                                                         href="{{ route('peserta.pelatihan.show', ['id' => $item->permintaan->id]) }}">Lihat
+                                                        Detail
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        @endif
+                    @endforeach
+                </div>
+
+                <div class="card rounded-2 border p-3 lift mb-3 shadow" data-aos="fade-up">
+                    <h5>Pelatihan Konsultasi</h5>
+                    <hr>
+                    @foreach ($konsultasis as $item)
+                        @if (isset($item->pelatihan_konsultasi))
+                            @php
+                                $id_konsultasi = $item->pelatihan_konsultasi->id_konsultasi;
+                            @endphp
+                            <div class="row gx-0">
+                                <div class="col-md-12">
+                                    <div class="card rounded-2 border p-3 lift mb-3">
+                                        <div class="row gx-0">
+                                            <a class="col-auto p-3 d-block"
+                                                href="{{ route('peserta.pelatihan.show', ['id' => $item->id]) }}"
+                                                style="max-width: 100px;">
+                                                <div class="d-flex justify-content-center align-items-center h-100">
+                                                    <img src="/img/stc1.png" class="img-fluid" width="100px" height="80">
+                                                </div>
+                                            </a>
+                                            <div class="col-12 col-md-9 col-lg-9 col-xl-9 d-md-block">
+                                                <div class="card-body p-3">
+                                                    <a class="d-block mb-2"
+                                                        href="{{ route('peserta.pelatihan.show', ['id' => $item->pelatihan_konsultasi->id]) }}">
+                                                        <h5 class="fw-bolder mb-n1">
+                                                            {{ $item->pelatihan_konsultasi->nama_pelatihan }}
+                                                        </h5>
+                                                    </a>
+
+                                                    <ul class="nav mx-n2 d-block d-md-flex">
+                                                        <li class="nav-item px-2 mb-1">
+                                                            <div class="d-flex align-items-center">
+                                                                <div class="me-1 d-flex text-secondary icon-uxs"><i
+                                                                        class="bi bi-calendar2-week"></i></div>
+                                                                <div class="font-size-sm">
+                                                                    {{ \Carbon\Carbon::parse($item->pelatihan_konsultasi->tanggal_mulai)->locale('id')->isoFormat('D MMMM') }}
+                                                                    -
+                                                                    {{ \Carbon\Carbon::parse($item->pelatihan_konsultasi->tanggal_selesai)->locale('id')->isoFormat('D MMMM Y') }}
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <div class="col-auto pe-xl-2 d-lg-flex place-center">
+                                                <div class="col-auto mt-5 px-auto">
+                                                    <a class="btn btn-outline-success btn-xs btn-pill mb-1"
+                                                        href="{{ route('peserta.pelatihan.show', ['id' => $item->konsultasi->id]) }}">Lihat
                                                         Detail
                                                     </a>
                                                 </div>
@@ -237,7 +305,7 @@
             </div>
 
             <div class="table-responsive-md">
-                <label for="">Tabel Permintaan</label>
+                <label for="">Tabel konsultasi</label>
                 <table class="table table-bordered">
                     <thead>
                         <tr>

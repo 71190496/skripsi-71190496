@@ -47,6 +47,8 @@
     <script src="{{ asset('select2/dist/js/select2.min.js') }}"></script>
 
 
+
+
     <!-- =======================================================
     * Template Name: Mentor
     * Updated: Mar 10 2023 with Bootstrap v5.2.3
@@ -59,7 +61,95 @@
 <body>
 
 
-    @include('peserta.layouts.header')
+    {{-- @include('peserta.layouts.header') --}}
+    <header id="header" class="fixed-top">
+        <div class="container d-flex align-items-center">
+
+            <h1 class="logo me-auto"><a href="/peserta/beranda"><img src="/img/stc1.png" alt=""></a></h1>
+            <!-- Uncomment below if you prefer to use an image logo -->
+            <!-- <a href="index.html" class="logo me-auto me-lg-0"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
+
+            {{-- @php
+                $currentUrl = Request::url();
+            @endphp --}}
+
+            <nav id="navbar" class="navbar order-last order-lg-0">
+                <ul>
+                    <li><a class="nav-link {{ Request::is('peserta/beranda*') ? 'active' : '' }}"
+                            href="/peserta/beranda">Beranda</a></li>
+
+                    <li class="dropdown"><a href="#"><span>Program Pelatihan</span> <i
+                                class="bi bi-chevron-down"></i></a>
+                        <ul>
+                            <li><a class="dropdown-item" href="/peserta/reguler">Reguler</a></li>
+                            <li><a class="dropdown-item" href="/peserta/permintaan/create">Permintaan</a></li>
+                            <li><a class="dropdown-item" href="/peserta/konsultasi/create">Konsultasi</a></li>
+                        </ul>
+                    </li>
+
+                    <li><a class="nav-link {{ Request::is('peserta/kontak*') ? 'active' : '' }}"
+                            href="/peserta/kontak">Kontak</a></li>
+                    @auth
+                        <li class="dropdown">
+                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
+                                aria-expanded="false" style="display: flex; align-items: center;">
+                                <img src="https://www.shutterstock.com/image-vector/profile-blank-icon-empty-photo-600nw-535853269.jpg"
+                                    alt="Foto user" class="avatar-img rounded-circle user"
+                                    style="width: 25px; height: 25px; border: 1px solid #000; margin-right: 5px;">
+                                <span style="margin-right: 5px;">{{ auth()->user()->name }}</span>
+                            </a>
+
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('profil.index') }}">Profil Saya</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="/peserta/pelatihan">Pelatihan Saya</a>
+                                </li>
+                                {{-- <form id="logoutForm" action="{{ route('logout') }}" method="post"> --}}
+                                {{-- @csrf --}}
+                                <li>
+                                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                                        <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                        Logout
+                                    </a>
+                                </li>
+                                {{-- </form>  --}}
+
+                            </ul>
+                        </li>
+                    @else
+                        <li><a class="nav-link" href="{{ route('login') }}">Masuk</a></li>
+                    @endauth
+
+                </ul>
+                <i class="bi bi-list mobile-nav-toggle"></i>
+            </nav><!-- .navbar -->
+        </div>
+    </header>
+
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Apakah anda ingin keluar?</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <!-- Formulir logout dengan tindakan statis -->
+                    <form id="logoutForm" action="/logout" method="post">
+                        @csrf
+                        <button class="btn btn-danger" type="submit">Logout</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
     {{-- @include('peserta.layouts.navtabs') --}}
@@ -75,11 +165,12 @@
         integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous">
     </script>
 
-
-
-    <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js"
-        integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE" crossorigin="anonymous">
-    </script>
+    {{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous">
+        < script src = "https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js"
+        integrity = "sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE"
+        crossorigin = "anonymous" >
+    </script> --}}
     <script src="{{ asset('stylepeserta/assets/vendor/purecounter/purecounter_vanilla.js') }}"></script>
     <script src="{{ asset('stylepeserta/assets/vendor/aos/aos.js') }}"></script>
     <script src="{{ asset('stylepeserta/assets/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
@@ -102,7 +193,24 @@
     <script>
         feather.replace()
     </script>
-    
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // Mendengarkan saat modal ditampilkan
+        $('#logoutModal').on('show.bs.modal', function(event) {
+            // Mendapatkan tombol yang memicu modal
+            var button = $(event.relatedTarget);
+            // Ambil URL logout dari tombol (jika ada)
+            var action = button.closest('form').attr('action');
+            // Ubah action form logout pada modal
+            $('#logoutForm').attr('action', action);
+        });
+    </script>
+
+    <!-- Form Builder -->
+    <script src="{{ asset('form-builder/form-builder.min.js') }}"></script>
+    <script src="{{ asset('form-builder/form-render.min.js') }}"></script>
+
 </body>
 @include('peserta.layouts.footer')
 

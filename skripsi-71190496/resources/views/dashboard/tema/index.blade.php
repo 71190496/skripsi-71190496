@@ -10,6 +10,9 @@
         <div class="pt-3">
             <div class="alert alert-success">
                 {{ Session::get('success') }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
         </div>
     @endif
@@ -20,7 +23,7 @@
         <div class="card shadow ">
             <div class="card-header py-3">
                 <div class="d-flex justify-content-start">
-                    <h6 class="m-0 font-weight-bold text-success">Daftar Postingan</h6>
+                    <h6 class="m-0 font-weight-bold text-success">Daftar Tema Pelatihan</h6>
                 </div>
             </div>
             <div class="card-body">

@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Hadir;
 use App\Models\gender;
 use App\Models\pelatihan;
-use App\Models\permintaan_pelatihan;
+use App\Models\konsultasi;
+use App\Models\UserPresensi;
 use Illuminate\Http\Request;
 use App\Models\jenis_organisasi;
-use App\Models\UserPresensi;
+use App\Models\permintaan_pelatihan;
+use App\Models\pelatihan_konsultasi;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Redirect;
@@ -58,6 +60,9 @@ class PesertaDaftarHadir extends Controller
         // Cari data permintaan pelatihan berdasarkan id
         $permintaan = permintaan_pelatihan::where('id', $id)->first();
 
+        // Cari data permintaan pelatihan berdasarkan id
+        $konsultasi = pelatihan_konsultasi::where('id', $id)->first();
+
         // Inisialisasi variabel untuk data hasil JSON
         $jsonData = [];
 
@@ -71,6 +76,10 @@ class PesertaDaftarHadir extends Controller
             $jsonData['permintaan'] = $permintaan;
         }
 
+        if ($konsultasi) {
+            $jsonData['konsultasi'] = $konsultasi;
+        }
+
         // Konversi data JSON ke dalam bentuk string
         $jsonString = json_encode($jsonData);
 
@@ -80,6 +89,7 @@ class PesertaDaftarHadir extends Controller
         // Inisialisasi variabel id untuk pelatihan dan permintaan
         $id_pelatihan = null;
         $id_permintaan = null;
+        $id_konsultasi = null;
 
         // Periksa apakah data yang ditemukan adalah pelatihan atau permintaan
         if (isset($dataArray['pelatihan'])) {
@@ -88,6 +98,9 @@ class PesertaDaftarHadir extends Controller
         } elseif (isset($dataArray['permintaan'])) {
             // Jika data yang ditemukan adalah data permintaan
             $id_permintaan = $dataArray['permintaan']['id'];
+        } elseif (isset($dataArray['konsultasi'])) {
+            // Jika data yang ditemukan adalah data konsultasi
+            $id_konsultasi = $dataArray['konsultasi']['id'];
         }
 
         // Lakukan proses selanjutnya berdasarkan tipe data yang ditemukan
@@ -121,6 +134,21 @@ class PesertaDaftarHadir extends Controller
                 'gender' => gender::all(),
                 'jenis_organisasi' => jenis_organisasi::all()
             ]);
+        } elseif ($id_konsultasi !== null) {
+            // Lakukan operasi yang sesuai untuk data permintaan
+            $id_presensi = Hadir::where('id_pelatihan', $id_permintaan)->value('id_presensi');
+            $presensiStatus = Hadir::where('id_pelatihan', $id_permintaan)->value('status');
+            $kembali = route('peserta.pelatihan.show', ['id' => $id]);
+            $studi = route('peserta.studidampak.create', ['id' => $id]);
+            $hadir = route('peserta.daftarhadir.create', ['id' => $id]);
+            $evaluasi = route('peserta.evaluasi.create', ['id' => $id]);
+            $survey = route('peserta.surveykepuasan.create', ['id' => $id]);
+            $sertifikat = route('peserta.sertifikat.show', ['id' => $id]);
+            return view('peserta.daftarhadir.create', compact('id_pelatihan', 'id_presensi', 'presensiStatus', 'kembali', 'studi', 'hadir', 'evaluasi', 'survey','sertifikat'), [
+                'title' => 'Form Daftar Hadir',
+                'gender' => gender::all(),
+                'jenis_organisasi' => jenis_organisasi::all()
+            ]);
         } else {
             // Tampilkan pesan atau lakukan tindakan lain jika tidak ada data yang ditemukan
         }
@@ -134,28 +162,33 @@ class PesertaDaftarHadir extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request);
+        // dd($request->all());
         if (Auth::check()) {
             // Get the currently authenticated user
             $user = Auth::user();
 
             // Dapatkan atau buat id_presensi berdasarkan id_pelatihan
             $id_pelatihan = $request->id_pelatihan;
+            // dd($id_pelatihan);
+            
             // Mengonversi string JSON ke dalam bentuk array PHP
             $dataArray = json_decode($id_pelatihan, true);
+            // dd($dataArray);
 
             // Mengambil nilai "id_pelatihan" dari array
-            $idPelatihan = $dataArray[0]['id_pelatihan'];
+            // $idPelatihan = $dataArray[0]['id_pelatihan'];
             // dd($idPelatihan);
-            $id_presensi = Hadir::where('id_pelatihan', $idPelatihan)->value('id_presensi');
+            $id_presensi = Hadir::where('id_pelatihan', $id_pelatihan)->value('id_presensi');
             // dd($id_presensi);
 
             // Siapkan data untuk membuat rekaman Hadir
             $data = [
                 'id_presensi' => $id_presensi,
+                'id_pelatihan' => $dataArray,
                 'id_user' => $user->id,
                 // Tambahkan kolom lain sesuai kebutuhan
             ];
+            // dd($data);
 
             // Buat rekaman baru di tabel UserPresensi
             UserPresensi::create($data);
@@ -163,7 +196,7 @@ class PesertaDaftarHadir extends Controller
             // Redirect dengan pesan sukses
             // return redirect()->route('peserta.daftarhadir.create', ['id' => $request->id_pelatihan])
             //     ->with('success', 'Berhasil mengisi studi dampak pelatihan');
-            return ('success');
+            return redirect()->route('peserta.daftarhadir.create', ['id' => $request->id_pelatihan])->with('success', 'Presensi Berhasil');
         }
     }
 

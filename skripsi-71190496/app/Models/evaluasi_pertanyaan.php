@@ -10,7 +10,7 @@ class evaluasi_pertanyaan extends Model
     use HasFactory;
     protected $table = 'evaluasi_pertanyaans';
     protected $primaryKey = 'id_pertanyaan';
-    protected $fillable = ['pertanyaan', 'id_pelatihan'];
+    protected $fillable = ['pertanyaan', 'id_pelatihan', 'tipe'];
     // protected $fillable = ['question', 'type', 'options'];
 
     public function jawabans()

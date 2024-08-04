@@ -167,8 +167,8 @@
                         <div class="form-group mt-3">
                             {{-- <label for="nama_mitra">Nama Mitra</label> --}}
                             <h6>Nama Mitra</h6>
-                            <select class="form-select @error('id_tema') is-invalid @enderror" name="id_mitra"
-                                id="id_mitra">
+                            <select id="mitra" class="form-select @error('id_mitra') is-invalid @enderror"
+                                name="id_mitra" id="id_mitra">
                                 <option value="">Pilih Mitra</option>
                                 @foreach ($mitra as $item)
                                     <option value="{{ $item->id_mitra }}"
@@ -176,12 +176,20 @@
                                         {{ $item->nama_mitra }}</option>
                                 @endforeach
                             </select>
-                            {{-- <input type="text" class="form-control @error('nama_mitra') is-invalid @enderror"
-                                id="nama_mitra" name="nama_mitra" placeholder="Nama Mitra"
-                                value="{{ old('nama_mitra') }}" autofocus> --}}
-                            {{-- @error('nama_mitra')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror --}}
+                            @error('id_mitra')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="form-group mt-3">
+                            {{-- <label for="judul_pelatihan">Judul Pelatihan</label> --}}
+                            <input type="text" class="form-control @error('nama_mitra') is-invalid @enderror"
+                                id="nama_mitra" name="nama_mitra"
+                                placeholder="Masukan nama Mitra jika belum ada nama Mitra dalam opsi (Opsional)"
+                                value="{{ old('nama_mitra') }}" autofocus>
+                            @error('nama_mitra')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
 
                         <div class="form-group mt-3">
@@ -196,7 +204,7 @@
                         </div>
 
                         <div class="row">
-                            <div class="col">
+                            {{-- <div class="col">
                                 <div class="form-group mt-3">
                                     <label for="jenis_pelatihan">Jenis Pelatihan</label>
                                     <select class="form-select @error('jenis_pelatihan') is-invalid @enderror"
@@ -216,7 +224,8 @@
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
-                            </div>
+                            </div> --}}
+
                             <div class="col">
                                 <div class="form-group mt-3">
                                     <label for="id_tema">Tema Pelatihan</label>
@@ -236,12 +245,24 @@
                             </div>
                         </div>
 
+                        <div class="col">
+                            <div class="form-group mt-3">
+                                <label for="no_pic">Nomor PIC Mitra</label>
+                                <input type="tel" maxlength="12" class="form-control @error('no_pic') is-invalid @enderror"
+                                    id="no_pic" name="no_pic" placeholder="Masukan Nomor PIC"
+                                    value="{{ old('no_pic') }}">
+                                @error('no_pic')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+
                         <div class="row mt-3">
                             <h6>Jadwal Pelaksanaan Pelatihan</h6>
                             <div class="col">
                                 <div class="form-group">
-                                    <p>Tanggal & Waktu Mulai</p>
-                                    <input type="datetime-local"
+                                    <p>Tanggal Mulai</p>
+                                    <input type="date"
                                         class="form-control @error('tanggal_waktu_mulai') is-invalid @enderror"
                                         id="tanggal_waktu_mulai" name="tanggal_waktu_mulai"
                                         value="{{ old('tanggal_waktu_mulai') }}">
@@ -250,10 +271,11 @@
                                     @enderror
                                 </div>
                             </div>
+                            {{-- datetime-local --}}
                             <div class="col">
                                 <div class="form-group">
-                                    <p>Tanggal & Waktu Selesai</p>
-                                    <input type="datetime-local"
+                                    <p>Tanggal Selesai</p>
+                                    <input type="date"
                                         class="form-control @error('tanggal_waktu_selesai') is-invalid @enderror"
                                         id="tanggal_waktu_selesai" name="tanggal_waktu_selesai"
                                         value="{{ old('tanggal_waktu_selesai') }}">
@@ -364,7 +386,7 @@
                             @enderror
                         </div>
 
-                        <div class="text-center"><button type="submit">Send Message</button></div>
+                        <div class="text-center"><button type="submit" class="btn btn-success">Daftar</button></div>
                     </form>
                 </div>
             </div>
@@ -401,6 +423,16 @@
             $(this).removeClass('is-invalid'); // Menghapus kelas 'is-invalid'
             $(this).siblings('.invalid-feedback').remove(); // Menghapus pesan kesalahan
         });
+
+        $('#mitra').select2({
+            placeholder: "Pilih Mitra",
+            // theme: "classic"
+        });
+
+        $('.form-control').on('input', function() {
+            $(this).removeClass('is-invalid'); // Menghapus kelas 'is-invalid'
+            $(this).siblings('.invalid-feedback').remove(); // Menghapus pesan kesalahan
+        });
     });
 </script>
 
@@ -418,7 +450,7 @@
                                 <tbody id="tableBody1">
                                     <tr>
                                         <td><input type="text" name="masalah[]" class="form-control" ></td>
-                                        <td><input type="text" name="kebutuhan[]" class="form-control" required></td>
+                                        <td><input type="text" name="kebutuhan[]" class="form-control" ></td>
                                         <td><input type="text" name="materi[]" class="form-control" required></td>
                                         <td>
                                             <button type="button" class="btn btn-primary btn-sm addRow1"><i

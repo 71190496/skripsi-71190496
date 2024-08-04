@@ -47,26 +47,30 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            @foreach ($data as $item)
-                                                @if ($item->id_pelatihan)
-                                                    @foreach ($item->filePelatihan as $file)
+                                        @foreach ($data as $item)
+                                            @if ($item->id_pelatihan && $item->filePelatihan->isNotEmpty())
+                                                @foreach ($item->filePelatihan as $file)
+                                                    <tr>
                                                         <td>
                                                             {{ basename($file->path) ?? '-' }}
                                                         </td>
-                                                    @endforeach
-                                                    @if ($item->filePelatihan->isNotEmpty())
+                                                        <td><a
+                                                                href="{{ asset('storage/' . $file['path']) }}">Download</a>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                                {{-- @if ($item->filePelatihan->isNotEmpty())
                                                         @foreach ($item->filePelatihan as $file)
                                                             <td><a
                                                                     href="{{ asset('storage/' . $file['path']) }}">Download</a>
                                                             </td>
                                                         @endforeach
-                                                    @else
-                                                        <td colspan="2">Belum ada materi yang diupload</td>
-                                                    @endif
-                                                @endif
-                                            @endforeach
-                                        </tr>
+                                                    
+                                                    @endif --}}
+                                            @else
+                                                <td colspan="2">Belum ada materi yang diupload</td>
+                                            @endif
+                                        @endforeach
                                     </tbody>
                                 </table>
                             @elseif (!empty($permintaans))
@@ -101,6 +105,48 @@
                                                     @endforeach
                                                     @if ($item->filePermintaan->isNotEmpty())
                                                         @foreach ($item->filePermintaan as $file)
+                                                            <td><a
+                                                                    href="{{ asset('storage/' . $file['path']) }}">Download</a>
+                                                            </td>
+                                                        @endforeach
+                                                    @else
+                                                        <td colspan="2">Belum ada materi yang diupload</td>
+                                                    @endif
+                                                @endif
+                                            @endforeach
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            @elseif (!empty($konsultasis))
+                                <div class="php-email-form mb-3">
+                                    <h2 class="entry-title">
+                                        <p>{{ $konsultasis[0]->nama_pelatihan }}</p>
+                                    </h2>
+                                </div>
+                                <div class="entry-content">
+                                    <p>Deskripsi Pelatihan : {!! $konsultasis[0]->deskripsi_pelatihan !!}</p>
+                                </div>
+                                <h2 class="entry-title">
+                                    Materi
+                                </h2>
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th class="col-md-3" scope="col">Judul Materi</th>
+                                            <th class="col-md-1" scope="col">Download File</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            @foreach ($konsultasis as $item)
+                                                @if ($item->id)
+                                                    @foreach ($item->filekonsultasi as $file)
+                                                        <td>
+                                                            {{ basename($file->path) ?? '-' }}
+                                                        </td>
+                                                    @endforeach
+                                                    @if ($item->filekonsultasi->isNotEmpty())
+                                                        @foreach ($item->filekonsultasi as $file)
                                                             <td><a
                                                                     href="{{ asset('storage/' . $file['path']) }}">Download</a>
                                                             </td>
